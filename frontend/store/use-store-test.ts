@@ -1,3 +1,1 @@
-export const useStore = () => {
-
-}
+export const useStore = () => {};
