@@ -20,6 +20,13 @@ yarn-error.log*
 .env
 .env.*
 !.env.example
+!.env.prod.example
+
+# Production secrets
+.env.prod
+nginx/ssl/*.key
+nginx/ssl/*.pem
+nginx/ssl/*.crt
 
 # =========================
 # Node / Package managers
@@ -58,6 +65,11 @@ backend/dist/
 docker-data/
 postgres-data/
 *.pid
+
+# Docker volumes and production data
+volumes/
+backups/*.sql
+!backups/.gitkeep
 
 # =========================
 # Testing
