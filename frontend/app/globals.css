@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui;
@@ -15,7 +15,7 @@
   --color-txt-warning: hsl(0, 73%, 49%);
   --color-txt-success: hsl(119, 73%, 43%);
 
-  --color-btn-primary: hsl(215 100% 51%); 
+  --color-btn-primary: hsl(215 100% 51%);
   --color-btn-primary-hover: hsl(215 100% 46%);
   --color-btn-primary-active: hsl(215 100% 41%);
   --color-btn-primary-disabled: hsl(215 100% 80%);
@@ -27,7 +27,6 @@
 
   --color-border-default: hsl(0, 0%, 85%);
   --radius-default: 12px;
-
 
   --color-input-border: hsl(192, 5%, 82%);
   --color-input-bg: hsl(0, 0%, 100%);
@@ -44,7 +43,12 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
     color: var(--color-txt-dark);
     font-weight: 600;
@@ -135,4 +139,3 @@
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 }
-
