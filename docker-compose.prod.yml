@@ -50,7 +50,7 @@ services:
     container_name: collab-task-hub-backend-prod
     restart: unless-stopped
     ports:
-      - "${BACKEND_PORT:-3000}:3000"
+      - "${BACKEND_PORT:-4000}:4000"
     environment:
       # Database
       DB_HOST: postgres
@@ -60,7 +60,7 @@ services:
       DB_DATABASE: ${DB_DATABASE}
 
       # Application
-      PORT: 3000
+      PORT: 4000
       NODE_ENV: production
 
       # Security
@@ -82,7 +82,7 @@ services:
           "--quiet",
           "--tries=1",
           "--spider",
-          "http://localhost:3000/health",
+          "http://localhost:4000/health",
         ]
       interval: 30s
       timeout: 10s
