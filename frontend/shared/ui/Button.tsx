@@ -1,9 +1,5 @@
-import { ButtonHTMLAttributes, forwardRef } from 'react';
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  isLoading?: boolean;
-  variant?: 'primary' | 'secondary' | 'danger';
-}
+import { forwardRef } from 'react';
+import { ButtonProps } from '@/shared/types';
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, isLoading, variant = 'primary', className, disabled, ...props }, ref) => {
