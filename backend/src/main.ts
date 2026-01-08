@@ -11,7 +11,9 @@ async function bootstrap() {
     .setDescription('API documentation for Collab Task Hub')
     .setVersion('1.0')
     .addTag('health')
+    .addTag('auth', 'Authentication endpoints')
     .addTag('tasks')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
