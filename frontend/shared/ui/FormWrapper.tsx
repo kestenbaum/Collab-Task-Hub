@@ -1,8 +1,5 @@
-import React, { FC, FormHTMLAttributes } from 'react';
-
-interface FormWrapperProps extends FormHTMLAttributes<HTMLFormElement> {
-  children: React.ReactNode;
-}
+import React, { FC } from 'react';
+import { FormWrapperProps } from '@/shared/types';
 
 export const FormWrapper: FC<FormWrapperProps> = ({ children, ...rest }) => {
   return (
