@@ -26,14 +26,14 @@ services:
     container_name: collab-task-hub-backend
     restart: always
     ports:
-      - "3000:3000"
+      - "4000:4000"
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USERNAME: ${DB_USERNAME:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       DB_DATABASE: ${DB_DATABASE:-collab_task_hub}
-      PORT: 3000
+      PORT: 4000
       NODE_ENV: development
     depends_on:
       postgres:
