@@ -1,32 +1,26 @@
 import { AxiosInstance } from 'axios';
 import { api } from '@/shared/api/axios';
-import { AuthResponse, User, LoginDto } from '@/features/auth/types';
-
+import { AuthResponseDto, LoginDto, RegisterDto } from '@/features/auth/types';
 
 class AuthServices {
   private axios: AxiosInstance = api;
 
-  public async registerUser(data: LoginDto) {
+  public async registerUser(data: RegisterDto): Promise<AuthResponseDto> {
     try {
-      const response = await this.axios.post<AuthResponse>('auth/register', data);
+      const response = await this.axios.post<AuthResponseDto>('/auth/register', data);
       return response.data;
     } catch (e: unknown) {
       throw e instanceof Error ? e : new Error(String(e));
     }
   }
 
-  public async loginUser(data: LoginDto) {
+  public async loginUser(data: LoginDto): Promise<AuthResponseDto> {
     try {
-      const response = await this.axios.post<AuthResponse>('auth/login', data);
+      const response = await this.axios.post<AuthResponseDto>('/auth/login', data);
       return response.data;
     } catch (e: unknown) {
       throw e instanceof Error ? e : new Error(String(e));
     }
-  }
-
-  public async fetchCurrentUser() {
-    const response = await this.axios.get<User>('auth/me');
-    return response.data;
   }
 }
 
