@@ -11,3 +11,4 @@ sleep 2
 echo "Starting frontend..."
 cd frontend
 npm run dev
+pause
