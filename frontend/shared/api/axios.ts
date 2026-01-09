@@ -10,17 +10,17 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(
-    (config) => {
-        if (typeof window !== 'undefined') {
-            const token: string | null = localStorage.getItem('access_token');
+  (config) => {
+    if (typeof window !== 'undefined') {
+      const token: string | null = localStorage.getItem('access_token');
 
-            if (token) {
-                config.headers = config.headers ?? {};
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-        }
+      if (token) {
+        config.headers = config.headers ?? {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
 
-        return config;
-    },
-    (error: unknown): Promise<never> => Promise.reject(error)
+    return config;
+  },
+  (error: unknown): Promise<never> => Promise.reject(error),
 );
