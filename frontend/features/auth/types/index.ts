@@ -1,27 +1,23 @@
-export interface AuthProps {}
-
-export interface LoginRequest {
+export interface User {
   email: string;
-  password: string;
+  name: string;
 }
 
-export interface RegisterRequest {
-  name: string;
+export interface AuthState {
+  user: User | null;
+  isAuth: boolean;
+  isLoading: boolean;
+  login: (data: LoginDto) => Promise<void>;
+  logout: () => void;
+  checkAuth: () => Promise<void>;
+}
+
+export interface LoginDto {
   email: string;
   password: string;
 }
 
 export interface AuthResponse {
-  access_token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
-}
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
+  user: User;
+  token: string;
 }
