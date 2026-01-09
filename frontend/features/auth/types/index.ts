@@ -1,15 +1,13 @@
-export interface User {
+export interface UserDto {
+  id: string;
   email: string;
   name: string;
 }
 
-export interface AuthState {
-  user: User | null;
-  isAuth: boolean;
-  isLoading: boolean;
-  login: (data: LoginDto) => Promise<void>;
-  logout: () => void;
-  checkAuth: () => Promise<void>;
+export interface RegisterDto {
+  email: string;
+  name: string;
+  password: string;
 }
 
 export interface LoginDto {
@@ -17,7 +15,16 @@ export interface LoginDto {
   password: string;
 }
 
-export interface AuthResponse {
-  user: User;
-  token: string;
+export interface AuthResponseDto {
+  access_token: string;
+  user: UserDto;
+}
+
+export interface AuthState {
+  user: UserDto | null;
+  isAuth: boolean;
+  isLoading: boolean;
+  loginUser: (data: LoginDto) => Promise<void>;
+  registerUser: (data: RegisterDto) => Promise<void>;
+  logoutUser: () => void;
 }

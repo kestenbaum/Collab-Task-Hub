@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, FormWrapper, Input } from '@/shared/ui';
 import { RegisterFormData, registerSchema } from '@/features/auth/schemas/auth.schema';
-import { authServices } from '@/features/auth/api/services/authServices';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,7 +9,7 @@ import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 
 const RegisterForm = () => {
   const router = useRouter();
-  const { setAuth } = useStoreAuth();
+  const { registerUser } = useStoreAuth();
   const [apiError, setApiError] = useState<string>('');
 
   const {
@@ -24,18 +23,18 @@ const RegisterForm = () => {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setApiError('');
-      const response = await authServices.register(data);
-      setAuth(response.access_token, response.user);
+      await registerUser(data);
       router.push('/');
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message = error.response?.data?.message || 'Registration failed. Please try again.';
+        const message = error.response?.data?.message ?? 'Registration failed';
         setApiError(Array.isArray(message) ? message.join(', ') : message);
       } else {
-        setApiError('An unexpected error occurred. Please try again.');
+        setApiError('Unexpected error');
       }
     }
   };
+
   return (
     <FormWrapper className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {apiError && (

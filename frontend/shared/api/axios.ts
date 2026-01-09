@@ -1,26 +1,29 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true,
-  timeout: 5000,
+    baseURL: 'http://127.0.0.1:4000',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    withCredentials: true,
 });
 
-api.interceptors.request.use(
-  (config) => {
+api.interceptors.request.use((config) => {
     if (typeof window !== 'undefined') {
-      const token: string | null = localStorage.getItem('access_token');
-
-      if (token) {
-        config.headers = config.headers ?? {};
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+        const token = localStorage.getItem('access_token');
+        if (token && config.headers) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
     }
-
     return config;
-  },
-  (error: unknown): Promise<never> => Promise.reject(error),
+});
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem('access_token');
+        }
+        return Promise.reject(error);
+    }
 );

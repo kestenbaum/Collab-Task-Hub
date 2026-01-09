@@ -3,7 +3,6 @@ import { Button, FormWrapper, Input } from '@/shared/ui';
 import { useForm } from 'react-hook-form';
 import { LoginFormData, loginSchema } from '@/features/auth/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authServices } from '@/features/auth/api/services/authServices';
 import axios from 'axios';
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import { useRouter } from 'next/navigation';
@@ -11,7 +10,7 @@ import { useRouter } from 'next/navigation';
 const LoginForm = () => {
   const [apiError, setApiError] = useState<string>('');
   const router = useRouter();
-  const { setAuth } = useStoreAuth();
+  const { loginUser } = useStoreAuth();
   const {
     register,
     handleSubmit,
@@ -23,15 +22,14 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setApiError('');
-      const response = await authServices.login(data);
-      setAuth(response.access_token, response.user);
+      await loginUser(data);
       router.push('/');
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message = error.response?.data?.message || 'Login failed. Please try again.';
+        const message = error.response?.data?.message ?? 'Login failed';
         setApiError(Array.isArray(message) ? message.join(', ') : message);
       } else {
-        setApiError('An unexpected error occurred. Please try again.');
+        setApiError('Unexpected error');
       }
     }
   };
