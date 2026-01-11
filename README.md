@@ -17,6 +17,7 @@ Das Hauptziel ist die Schaffung einer kontrollierten Arbeitsumgebung für Teams.
 ## 🏗️ Architektur
 
 ### Frontend
+
 - **Framework**: Next.js (React)
 - **Formular-Management**: React Hook Form
 - **Validierung**: Zod
@@ -24,14 +25,17 @@ Das Hauptziel ist die Schaffung einer kontrollierten Arbeitsumgebung für Teams.
 - **Styling**: Tailwind CSS
 
 ### Backend
+
 - **Framework**: NestJS
 - **API-Dokumentation**: Swagger (OpenAPI)
 - **Echtzeit-Kommunikation**: Socket.io (WebSockets)
 
 ### Datenbank
+
 - **RDBMS**: PostgreSQL
 
 ### Infrastruktur & QA
+
 - **Containerisierung**: Docker
 - **CI/CD**: Automatisierte Pipelines
 - **Testing**: Jest (Unit Tests), Cypress (E2E Tests)
@@ -41,19 +45,23 @@ Das Hauptziel ist die Schaffung einer kontrollierten Arbeitsumgebung für Teams.
 Das MVP umfasst folgende Kernfunktionen:
 
 1. **Benutzerverwaltung**
+
    - Registrierung und Login
    - JWT-basierte Authentifizierung
 
 2. **Task-Management**
+
    - Erstellen von Aufgaben mit Titel und Beschreibung
    - Aufgabenverwaltung
 
 3. **Berechtigungslogik**
+
    - Benutzer können Beitrittsanfragen für Aufgaben senden
    - Aufgaben-Ersteller erhalten Anfragen im Dashboard
    - Genehmigung oder Ablehnung von Beitrittsanfragen
 
 4. **Echtzeit-Kommunikation**
+
    - Integrierter Chat pro Aufgabe (via WebSockets)
    - Chat nur für genehmigte Teilnehmer sichtbar
 
@@ -76,27 +84,56 @@ Das MVP umfasst folgende Kernfunktionen:
 git clone <repository-url>
 cd Collab-Task-Hub
 
-# Docker Container starten
+# Umgebungsvariablen erstellen (optional)
+# Erstellen Sie eine .env-Datei mit:
+# DB_USERNAME=postgres
+# DB_PASSWORD=postgres
+# DB_DATABASE=collab_task_hub
+
+# Docker Container starten (baut automatisch Images und startet alle Services)
 docker-compose up -d
 
-# Backend dependencies installieren
-cd backend
-npm install
+# Logs anzeigen
+docker-compose logs -f
 
-# Frontend dependencies installieren
-cd ../frontend
-npm install
+# Status prüfen
+docker-compose ps
 ```
 
-### Umgebungsvariablen
+**Services nach dem Start:**
 
-Erstellen Sie eine `.env`-Datei im Hauptverzeichnis:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:4000
+- Swagger Docs: http://localhost:4000/api
+- PostgreSQL: localhost:5432
 
-```env
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_DATABASE=collab_task_hub
+### Docker Befehle
+
+```bash
+# Container stoppen
+docker-compose down
+
+# Container neu bauen (nach package.json Änderungen)
+docker-compose build
+docker-compose up -d
+
+# Bestimmten Service neu starten
+docker-compose restart backend
+docker-compose restart frontend
+
+# Logs anzeigen
+docker-compose logs -f backend
+docker-compose logs -f frontend
+
+# In Container Shell zugreifen
+docker-compose exec backend sh
+docker-compose exec frontend sh
+
+# Alles löschen (inkl. Volumes)
+docker-compose down -v
 ```
+
+**Hinweis**: Das Projekt nutzt Hot-Reload in der Entwicklungsumgebung. Code-Änderungen werden automatisch erkannt und neu geladen.
 
 ## 📚 Projektstruktur
 
