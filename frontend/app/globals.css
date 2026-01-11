@@ -35,7 +35,16 @@
   --radius-input: 8px;
 }
 
+
 @layer base {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
   body {
     font-family: var(--font-sans);
     background-color: var(--color-bg-main);
@@ -60,9 +69,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
+    padding: 16px 45px;
     border-radius: 15px;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 500;
     line-height: 1;
     cursor: pointer;

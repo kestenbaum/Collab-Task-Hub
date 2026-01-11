@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter, Nunito } from 'next/font/google';
 
 import './globals.css';
+import AppHeader from '@/shared/components/Header';
 
 export const metadata: Metadata = {
   title: 'Collab Task Hub',
@@ -26,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${nunito.variable}`}>
-      <body>{children}</body>
+      <body>
+        <AppHeader />
+        {children}
+      </body>
     </html>
   );
 }
