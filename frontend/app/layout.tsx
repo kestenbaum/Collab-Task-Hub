@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${nunito.variable}`}>
       <body>
         <AppHeader />
-        {children}
+        <div className="container bg-[var(--color-bg-main)]">{children}</div>
       </body>
     </html>
   );
