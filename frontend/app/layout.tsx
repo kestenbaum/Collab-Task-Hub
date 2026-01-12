@@ -2,11 +2,11 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Inter, Nunito } from 'next/font/google';
 
+import AuthProvider from '@/features/auth/provider/AuthProvider';
 import { ModalHost } from '@/features/modal/components/ModalHost';
 import { AppHeader } from '@/widgets/app-header/ui';
 
 import './globals.css';
-import AuthProvider from "@/features/auth/provider/AuthProvider";
 
 export const metadata: Metadata = {
   title: 'Collab Task Hub',
