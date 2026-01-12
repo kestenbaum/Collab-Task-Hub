@@ -48,6 +48,28 @@ export class AuthService {
     return user;
   }
 
+  async validateUserCredentials(
+    email: string,
+    password: string,
+  ): Promise<User | null> {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user) {
+      return null;
+    }
+
+    const isPasswordValid = await this.usersService.validatePassword(
+      user,
+      password,
+    );
+
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    return user;
+  }
+
   private generateAuthResponse(user: User): AuthResponseDto {
     const payload = { sub: user.id, email: user.email };
     const access_token = this.jwtService.sign(payload);
