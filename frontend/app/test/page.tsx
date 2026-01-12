@@ -1,6 +1,10 @@
 'use client';
 
+import { useModal } from '@/features/modal/hooks/useModal';
+
 export default function Page() {
+  const { openModal } = useModal();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
@@ -28,6 +32,20 @@ export default function Page() {
             <input className="input" placeholder="Hallo" />
           </div>
         </div>
+
+        <button
+          className="btn btn-primary"
+          onClick={() =>
+            openModal(
+              <div className="w-[320px]">
+                <h3>Test modal</h3>
+                <p className="mt-2">Content ...........</p>
+              </div>,
+            )
+          }
+        >
+          Popup
+        </button>
       </div>
     </div>
   );

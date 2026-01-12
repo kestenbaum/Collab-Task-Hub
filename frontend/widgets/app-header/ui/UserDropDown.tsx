@@ -43,7 +43,8 @@ export const UserDropDown = ({ user, onLogout }: UserDropdownProps) => {
               Profile
             </Link>
 
-            <Link className="block rounded-md px-3 py-2 text-sm "
+            <Link
+              className="block rounded-md px-3 py-2 text-sm "
               type="button"
               href={HEADER_LINKS.login}
               onClick={() => {
