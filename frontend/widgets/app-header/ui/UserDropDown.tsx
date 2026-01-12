@@ -37,22 +37,22 @@ export const UserDropDown = ({ user, onLogout }: UserDropdownProps) => {
           <div className="absolute right-0 mt-2 w-44 rounded-[var(--radius-input)] border border-[var(--color-border-default)] bg-white p-1 shadow-lg z-20">
             <Link
               href={HEADER_LINKS.profile}
-              className="block rounded-md px-3 py-2 text-sm hover:bg-slate-100 transition-colors"
+              className="block rounded-md px-3 py-2 text-sm"
               onClick={() => setOpen(false)}
             >
               Profile
             </Link>
 
-            <Button
+            <Link className="block rounded-md px-3 py-2 text-sm "
               type="button"
-              variant="danger"
+              href={HEADER_LINKS.login}
               onClick={() => {
                 setOpen(false);
                 onLogout();
               }}
             >
               Logout
-            </Button>
+            </Link>
           </div>
         </>
       )}
