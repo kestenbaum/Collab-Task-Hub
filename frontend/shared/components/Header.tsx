@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
 const AppHeader = () => {
-  const { isAuth, user, logout } = useAuth();
+  const { isAuth, user, logoutUser } = useAuth();
   const [open, setOpen] = useState(false);
 
   const initialName = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
@@ -66,7 +66,7 @@ const AppHeader = () => {
             className="block w-full rounded-md px-3 py-2 text-left text-sm hover:bg-slate-100 cursor-pointer"
             onClick={() => {
               setOpen(false);
-              logout();
+              logoutUser();
             }}
           >
             Logout
