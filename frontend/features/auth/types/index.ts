@@ -27,4 +27,5 @@ export interface AuthState {
   loginUser: (data: LoginDto) => Promise<void>;
   registerUser: (data: RegisterDto) => Promise<void>;
   logoutUser: () => void;
+  restoreUser: () => Promise<void>;
 }

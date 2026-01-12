@@ -22,6 +22,19 @@ class AuthServices {
       throw e instanceof Error ? e : new Error(String(e));
     }
   }
+
+  public async getCurrentUser() {
+    const token = localStorage.getItem('access_token');
+    if (!token) throw new Error('No token');
+
+    const { data } = await this.axios.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return data;
+  }
 }
 
 export const authServices = new AuthServices();
