@@ -6,6 +6,9 @@ export const useStoreModal = create<ModalState>((set) => ({
   isOpen: false,
   content: null,
 
-  open: (content) => set({ isOpen: true, content }),
+  open: (content) => {
+    set({ content: null}, false);
+    set({ isOpen: true, content })
+  },
   close: () => set({ isOpen: false, content: null }),
 }));
