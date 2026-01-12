@@ -10,10 +10,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           className={`
-            px-3 py-2 rounded-md border transition-colors
-            focus:outline-none focus:ring-2
+              bg-[var(--color-input-bg)] 
+              border-[var(--color-input-border)] 
+              text-[var(--color-input-text)]
+              placeholder-[var(--color-input-placeholder)]
+              /* Скругление инпута */
+              rounded-[var(--radius-input)]
+              border
+              py-2.5
+              px-4.5
+              focus:placeholder-transparent outline-none transition-all duration-300
             ${error ? 'border-red-500 ' : 'border-gray-300 '}
-            ${className}
           `}
           {...props}
         />

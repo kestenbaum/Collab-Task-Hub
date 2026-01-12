@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter, Nunito } from 'next/font/google';
 
 import { ModalHost } from '@/features/modal/components/ModalHost';
-import AppHeader from '@/shared/components/Header';
+import { AppHeader } from '@/widgets/app-header/ui';
 
 import './globals.css';
 
@@ -31,8 +31,8 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${nunito.variable}`}>
       <body>
         <AppHeader />
-        {children}
         <ModalHost />
+        <div className="container bg-[var(--color-bg-main)]">{children}</div>
       </body>
     </html>
   );

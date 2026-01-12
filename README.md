@@ -17,6 +17,7 @@ Das Hauptziel ist die Schaffung einer kontrollierten Arbeitsumgebung für Teams.
 ## 🏗️ Architektur
 
 ### Frontend
+
 - **Framework**: Next.js (React)
 - **Formular-Management**: React Hook Form
 - **Validierung**: Zod
@@ -24,14 +25,17 @@ Das Hauptziel ist die Schaffung einer kontrollierten Arbeitsumgebung für Teams.
 - **Styling**: Tailwind CSS
 
 ### Backend
+
 - **Framework**: NestJS
 - **API-Dokumentation**: Swagger (OpenAPI)
 - **Echtzeit-Kommunikation**: Socket.io (WebSockets)
 
 ### Datenbank
+
 - **RDBMS**: PostgreSQL
 
 ### Infrastruktur & QA
+
 - **Containerisierung**: Docker
 - **CI/CD**: Automatisierte Pipelines
 - **Testing**: Jest (Unit Tests), Cypress (E2E Tests)
@@ -41,19 +45,23 @@ Das Hauptziel ist die Schaffung einer kontrollierten Arbeitsumgebung für Teams.
 Das MVP umfasst folgende Kernfunktionen:
 
 1. **Benutzerverwaltung**
+
    - Registrierung und Login
    - JWT-basierte Authentifizierung
 
 2. **Task-Management**
+
    - Erstellen von Aufgaben mit Titel und Beschreibung
    - Aufgabenverwaltung
 
 3. **Berechtigungslogik**
+
    - Benutzer können Beitrittsanfragen für Aufgaben senden
    - Aufgaben-Ersteller erhalten Anfragen im Dashboard
    - Genehmigung oder Ablehnung von Beitrittsanfragen
 
 4. **Echtzeit-Kommunikation**
+
    - Integrierter Chat pro Aufgabe (via WebSockets)
    - Chat nur für genehmigte Teilnehmer sichtbar
 
@@ -76,27 +84,56 @@ Das MVP umfasst folgende Kernfunktionen:
 git clone <repository-url>
 cd Collab-Task-Hub
 
-# Docker Container starten
+# Umgebungsvariablen erstellen (optional)
+# Erstellen Sie eine .env-Datei mit:
+# DB_USERNAME=postgres
+# DB_PASSWORD=postgres
+# DB_DATABASE=collab_task_hub
+
+# Docker Container starten (baut automatisch Images und startet alle Services)
 docker-compose up -d
 
-# Backend dependencies installieren
-cd backend
-npm install
+# Logs anzeigen
+docker-compose logs -f
 
-# Frontend dependencies installieren
-cd ../frontend
-npm install
+# Status prüfen
+docker-compose ps
 ```
 
-### Umgebungsvariablen
+**Services nach dem Start:**
 
-Erstellen Sie eine `.env`-Datei im Hauptverzeichnis:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:4000
+- Swagger Docs: http://localhost:4000/api
+- PostgreSQL: localhost:5432
 
-```env
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_DATABASE=collab_task_hub
+### Docker Befehle
+
+```bash
+# Container stoppen
+docker-compose down
+
+# Container neu bauen (nach package.json Änderungen)
+docker-compose build
+docker-compose up -d
+
+# Bestimmten Service neu starten
+docker-compose restart backend
+docker-compose restart frontend
+
+# Logs anzeigen
+docker-compose logs -f backend
+docker-compose logs -f frontend
+
+# In Container Shell zugreifen
+docker-compose exec backend sh
+docker-compose exec frontend sh
+
+# Alles löschen (inkl. Volumes)
+docker-compose down -v
 ```
+
+**Hinweis**: Das Projekt nutzt Hot-Reload in der Entwicklungsumgebung. Code-Änderungen werden automatisch erkannt und neu geladen.
 
 ## 📚 Projektstruktur
 
@@ -104,8 +141,9 @@ DB_DATABASE=collab_task_hub
 Collab-Task-Hub/
 ├── backend/          # NestJS Backend
 │   ├── src/
-│   │   ├── auth/    # Authentifizierung
-│   │   ├── users/   # Benutzerverwaltung
+│   │   ├── auth/      # Authentifizierung
+│   │   ├── users/     # Benutzerverwaltung
+│   │   ├── projects/  # Projektverwaltung mit RBAC
 │   │   └── main.ts
 │   └── test/
 ├── frontend/         # Next.js Frontend
@@ -115,6 +153,142 @@ Collab-Task-Hub/
 ├── nginx/           # Nginx Konfiguration
 └── docker-compose.yml
 ```
+
+## 🔐 API-Dokumentation
+
+### Projekt-Management (RBAC)
+
+Das Projekt-Modul implementiert vollständige CRUD-Operationen mit rollenbasierter Zugriffskontrolle (RBAC). Wenn ein Benutzer ein Projekt erstellt, wird er automatisch als Administrator zugewiesen.
+
+#### Funktionen
+
+- **Projekt-CRUD**: Erstellen, Lesen, Aktualisieren, Löschen von Projekten
+- **Automatische Rollenzuweisung**: Projekt-Ersteller wird automatisch als Admin zugewiesen
+- **Rollenbasierte Zugriffskontrolle**: Drei Rollen verfügbar (Admin, Member, Viewer)
+- **Mitgliederverwaltung**: Mitglieder hinzufügen/entfernen, Rollen aktualisieren
+- **Autorisierung**: Nur Admins können Projekte ändern und Mitglieder verwalten
+
+#### Entitäten
+
+**Project**
+
+- `id`: UUID (Primary Key)
+- `title`: String (max. 200 Zeichen)
+- `description`: Text (optional)
+- `createdById`: UUID (Foreign Key zu User)
+- `createdBy`: User-Relation
+- `members`: ProjectMember[]-Relation
+- `createdAt`: Timestamp
+- `updatedAt`: Timestamp
+
+**ProjectMember**
+
+- `id`: UUID (Primary Key)
+- `role`: Enum (admin, member, viewer)
+- `userId`: UUID (Foreign Key zu User)
+- `projectId`: UUID (Foreign Key zu Project)
+- `user`: User-Relation
+- `project`: Project-Relation
+- `createdAt`: Timestamp
+- `updatedAt`: Timestamp
+
+**ProjectRole Enum**
+
+- `ADMIN`: Vollzugriff auf das Projekt, kann Mitglieder und Einstellungen verwalten
+- `MEMBER`: Kann Projektinhalte ansehen und bearbeiten
+- `VIEWER`: Nur-Lese-Zugriff
+
+#### API-Endpunkte
+
+**Projekt erstellen**
+
+```http
+POST /projects
+Authorization: Bearer <token>
+
+{
+  "title": "Projektname",
+  "description": "Projektbeschreibung (optional)"
+}
+```
+
+**Alle Projekte abrufen**
+
+```http
+GET /projects
+Authorization: Bearer <token>
+```
+
+**Einzelnes Projekt abrufen**
+
+```http
+GET /projects/:id
+Authorization: Bearer <token>
+```
+
+**Projekt aktualisieren** (nur Admin)
+
+```http
+PATCH /projects/:id
+Authorization: Bearer <token>
+
+{
+  "title": "Aktualisierter Projektname",
+  "description": "Aktualisierte Beschreibung"
+}
+```
+
+**Projekt löschen** (nur Admin)
+
+```http
+DELETE /projects/:id
+Authorization: Bearer <token>
+```
+
+**Mitglied hinzufügen** (nur Admin)
+
+```http
+POST /projects/:id/members
+Authorization: Bearer <token>
+
+{
+  "userId": "uuid",
+  "role": "member" | "admin" | "viewer"
+}
+```
+
+**Mitglied entfernen** (nur Admin)
+
+```http
+DELETE /projects/:id/members/:memberId
+Authorization: Bearer <token>
+```
+
+**Mitgliederrolle aktualisieren** (nur Admin)
+
+```http
+PATCH /projects/:id/members/:memberId
+Authorization: Bearer <token>
+
+{
+  "role": "admin" | "member" | "viewer"
+}
+```
+
+**Benutzerrolle im Projekt abrufen**
+
+```http
+GET /projects/:id/role
+Authorization: Bearer <token>
+```
+
+#### Autorisierungsregeln
+
+1. **Projekt erstellen**: Jeder authentifizierte Benutzer kann ein Projekt erstellen
+2. **Projekt aktualisieren/löschen**: Nur Admins können Projekte aktualisieren oder löschen
+3. **Mitgliederverwaltung**: Nur Admins können Mitglieder hinzufügen, entfernen oder Rollen ändern
+4. **Projekt ansehen**: Jedes Projektmitglied kann das Projekt ansehen
+5. **Letzter Admin-Schutz**: Der letzte Admin eines Projekts kann nicht entfernt oder herabgestuft werden
 
 ## 🧪 Testing
 
