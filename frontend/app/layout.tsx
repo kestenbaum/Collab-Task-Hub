@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Inter, Nunito } from 'next/font/google';
 
-import AppHeader from '@/shared/components/Header';
+import { AppHeader } from '@/widgets/app-header/ui';
 
 import './globals.css';
 
