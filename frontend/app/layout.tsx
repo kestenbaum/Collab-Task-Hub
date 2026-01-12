@@ -6,6 +6,7 @@ import { ModalHost } from '@/features/modal/components/ModalHost';
 import { AppHeader } from '@/widgets/app-header/ui';
 
 import './globals.css';
+import AuthProvider from "@/features/auth/provider/AuthProvider";
 
 export const metadata: Metadata = {
   title: 'Collab Task Hub',
@@ -32,7 +33,9 @@ export default function RootLayout({
       <body>
         <AppHeader />
         <ModalHost />
-        <div className="container bg-[var(--color-bg-main)]">{children}</div>
+        <AuthProvider>
+          <div className="container bg-[var(--color-bg-main)]">{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );

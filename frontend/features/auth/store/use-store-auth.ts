@@ -27,4 +27,15 @@ export const useStoreAuth = create<AuthState>((set) => ({
     localStorage.removeItem('access_token');
     set({ user: null, isAuth: false });
   },
+
+  restoreUser: async () => {
+    set({ isLoading: true });
+    try {
+      const user = await authServices.getCurrentUser();
+      set({ user, isAuth: true, isLoading: false });
+    } catch (err) {
+      set({ user: null, isAuth: false, isLoading: false });
+      localStorage.removeItem('access_token');
+    }
+  },
 }));
