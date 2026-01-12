@@ -2,8 +2,9 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Inter, Nunito } from 'next/font/google';
 
-import './globals.css';
 import AppHeader from '@/shared/components/Header';
+
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Collab Task Hub',

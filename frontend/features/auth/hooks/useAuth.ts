@@ -1,7 +1,7 @@
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 
 export const useAuth = () => {
-  const { isAuth, checkAuth, user, logout, login, isLoading } = useStoreAuth();
+  const { isAuth, user, isLoading, logoutUser, loginUser, registerUser } = useStoreAuth();
 
-  return { isAuth, checkAuth, user, logout, login, isLoading };
+  return { registerUser, loginUser, logoutUser, user, isAuth, isLoading };
 };
