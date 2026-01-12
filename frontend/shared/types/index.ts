@@ -17,3 +17,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   helperText?: string;
 }
+
+export interface WrapperProps {
+  children: React.ReactNode;
+}
