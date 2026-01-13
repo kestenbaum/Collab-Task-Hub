@@ -369,15 +369,111 @@ Authorization: Bearer <token>
 
 ## 🧪 Testing
 
-```bash
-# Backend Unit Tests
-cd backend
-npm run test
+### Backend Testing mit Jest
 
-# Backend E2E Tests
+Das Projekt verfügt über eine umfassende Test-Suite, die Authentifizierung, CRUD-Operationen und Autorisierung abdeckt.
+
+#### Test-Setup
+
+**Voraussetzungen:**
+
+1. PostgreSQL muss laufen
+2. Test-Datenbank erstellen:
+   ```sql
+   CREATE DATABASE collab_test;
+   ```
+
+**Umgebungskonfiguration:**
+
+- Datei `.env.test` im Backend-Verzeichnis enthält die Test-Datenbank-Konfiguration
+- Standard: `collab_test` Datenbank auf localhost:5432
+
+#### Tests ausführen
+
+```bash
+# Backend E2E Tests (alle)
+cd backend
 npm run test:e2e
 
-# Frontend Tests
+# Tests mit Coverage
+npm run test:cov
+
+# Tests im Watch-Modus
+npm run test:watch
+
+# Backend Unit Tests
+npm run test
+```
+
+#### Test-Abdeckung
+
+**Authentifizierung & Sicherheit (17 Tests)**
+
+- ✅ Benutzerregistrierung mit DTO-Validierung
+- ✅ Login mit Credential-Validierung
+- ✅ JWT-Token-Generierung und -Verifizierung
+- ✅ Passwort-Hashing (bcrypt, kein Klartext)
+- ✅ Geschützte Routen (401 Unauthorized ohne Token)
+- ✅ Ungültige/fehlerhafte Token-Behandlung
+- ✅ Validierung fehlender Felder (400 Bad Request)
+- ✅ E-Mail-Format-Validierung
+- ✅ Passwort-Mindestlänge (6 Zeichen)
+- ✅ Duplikat-E-Mail-Prävention (409 Conflict)
+
+**CRUD-Operationen (27 Tests)**
+
+- ✅ **POST**: Erstellen mit Validierung, automatische Admin-Zuweisung
+- ✅ **GET**: Alle Projekte abrufen, einzelnes Projekt nach ID, 404-Behandlung
+- ✅ **PATCH**: Partielle Updates, Admin-Berechtigung erforderlich
+- ✅ **DELETE**: Datensatz-Entfernung, Verifizierung, nur Admin
+- ✅ Autorisierung: Benutzer können nur eigene Projekte bearbeiten/löschen
+- ✅ Ownership-Prüfung: 403 Forbidden für Nicht-Eigentümer
+- ✅ DTO-Validierung: Titel maximal 200 Zeichen, Pflichtfelder
+
+**Datenbank-Integration**
+
+- Separate Test-Datenbank (keine Verschmutzung der Entwicklungsdaten)
+- Schema wird vor jedem Testlauf neu erstellt (dropSchema + synchronize)
+- TypeORM Entity-Mapping
+- Isolierte Testumgebung
+
+#### Test-Dateien
+
+| Datei                       | Beschreibung                                        |
+| --------------------------- | --------------------------------------------------- |
+| `test/auth.e2e-spec.ts`     | Authentifizierung, Guards, JWT, Passwort-Sicherheit |
+| `test/projects.e2e-spec.ts` | CRUD-Operationen, Autorisierung, Ownership          |
+| `test/test-utils.ts`        | Test-Datenbank-Konfiguration & App-Factory          |
+| `test/jest-e2e.json`        | E2E-Test-Konfiguration (30s Timeout)                |
+| `.env.test`                 | Test-Umgebungsvariablen                             |
+
+#### Troubleshooting
+
+**Datenbankverbindungsfehler:**
+
+```
+Error: connect ECONNREFUSED
+```
+
+- PostgreSQL läuft nicht → `docker-compose up -d` oder PostgreSQL-Service starten
+- Credentials in `.env.test` prüfen
+- Test-Datenbank `collab_test` existiert nicht → `CREATE DATABASE collab_test;`
+
+**Test-Timeout:**
+
+- Timeout in `test/jest-e2e.json` erhöhen (aktuell 30000ms)
+- Datenbank-Performance prüfen
+
+**Module nicht gefunden:**
+
+```bash
+cd backend
+npm install
+```
+
+### Frontend Tests
+
+```bash
 cd frontend
 npm run test
 ```
