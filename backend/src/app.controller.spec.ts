@@ -15,10 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello from Collab Task Hub! Hot reload is working! 🚀"', () => {
-      expect(appController.getHello()).toBe(
-        'Hello from Collab Task Hub! Hot reload is working! 🚀',
-      );
+    it('should return "Hello World!"', () => {
+      expect(appController.getHello()).toBe('Hello World!');
     });
   });
 });
