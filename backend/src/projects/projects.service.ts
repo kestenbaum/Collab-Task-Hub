@@ -64,6 +64,15 @@ export class ProjectsService {
   }
 
   /**
+   * Get all projects (admin only)
+   */
+  async findAllProjects(): Promise<Project[]> {
+    return this.projectRepository.find({
+      relations: ['createdBy', 'members', 'members.user'],
+    });
+  }
+
+  /**
    * Get a single project by ID
    */
   async findOne(id: string): Promise<Project> {
