@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { HEADER_LINKS } from '../config/navigation';
-import { Button } from '@/shared/ui';
 
 interface UserDropdownProps {
   user: { name?: string } | null;
