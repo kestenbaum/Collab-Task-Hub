@@ -1,6 +1,7 @@
 'use client';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useModal } from '@/features/modal/hooks/useModal';
+import { CreateForm } from '@/features/project/components';
 import { Button } from '@/shared/ui';
 
 export default function Home() {
@@ -16,8 +17,9 @@ export default function Home() {
             onClick={() =>
               openModal(
                 <div className="w-[320px]">
-                  <h3>Create Task</h3>
+                  <h3 className="mb-2.5">Create Task</h3>
                   <p className="mt-2">Add task form</p>
+                  <CreateForm />
                 </div>,
               )
             }
