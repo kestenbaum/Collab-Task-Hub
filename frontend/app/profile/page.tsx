@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import { Button } from '@/shared/ui';
+import { Loader } from '@/shared/ui/Loader';
+import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -22,41 +24,41 @@ export default function ProfilePage() {
   };
 
   if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Loading...</p>
-      </div>
-    );
+    return <Loader />;
   }
 
+  const initialName = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-6">User Profile</h1>
-
-        <div className="space-y-4">
-          <div className="border-b pb-3">
-            <label className="block text-sm font-medium text-gray-600">ID</label>
-            <p className="mt-1 text-gray-900">{user.id}</p>
-          </div>
-
-          <div className="border-b pb-3">
-            <label className="block text-sm font-medium text-gray-600">Email</label>
-            <p className="mt-1 text-gray-900">{user.email}</p>
-          </div>
-
-          <div className="border-b pb-3">
-            <label className="block text-sm font-medium text-gray-600">Name</label>
-            <p className="mt-1 text-gray-900">{user.name}</p>
-          </div>
+    <section className="min-h-screen flex flex-col bg-[var(--color-bg-main)] p-6">
+      <div className="grid grid-cols-2 gap-6 w-full [&>*]:w-full">
+        <div className="flex h-full">
+          <Wrapper>
+            <span className="border border-[var(--color-border-default)] grid h-20 w-20 place-items-center rounded-full font-medium">
+              {initialName}
+            </span>
+            <ul>
+              <li className="mt-1 text-gray-900">
+                <span>User ID: {user.id}</span>
+              </li>
+              <li className="mt-1 text-gray-900">
+                <span>User Email: {user.email}</span>
+              </li>
+              <li className="mt-1 text-gray-900">
+                <span>User Name: {user.name}</span>
+              </li>
+            </ul>
+          </Wrapper>
         </div>
-
-        <div className="mt-6">
-          <Button onClick={handleLogout} variant="danger" className="w-full">
-            Logout
-          </Button>
+        <div className="flex h-full w-1/2">
+          <Wrapper>
+            User Project: null
+            <Button onClick={handleLogout} variant="danger">
+              Logout
+            </Button>
+          </Wrapper>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
