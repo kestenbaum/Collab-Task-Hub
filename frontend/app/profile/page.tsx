@@ -30,8 +30,8 @@ export default function ProfilePage() {
   const initialName = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
 
   return (
-    <section className="min-h-[calc(100vh-77px-4rem)] bg-bg-main p-8">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+    <section className="min-h-[calc(100vh-77px-4rem)] bg-bg-main pt-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Wrapper className="flex flex-col items-center p-10 text-center md:items-start md:text-left h-full">
           <div className="mb-6">
             <span className="border-2 border-border-default flex h-24 w-24 items-center justify-center rounded-full text-2xl font-bold bg-white text-(--color-text-main) shadow-sm">
