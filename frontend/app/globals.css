@@ -147,3 +147,59 @@
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 }
+
+@layer utilities {
+  @keyframes modal-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes modal-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes modal-pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes modal-pop-out {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+
+  .animate-modal-overlay-in {
+    animation: modal-fade-in 200ms ease-out both;
+  }
+  .animate-modal-overlay-out {
+    animation: modal-fade-out 200ms ease-out both;
+  }
+
+  .animate-modal-panel-in {
+    animation: modal-pop-in 200ms ease-out both;
+  }
+  .animate-modal-panel-out {
+    animation: modal-pop-out 200ms ease-out both;
+  }
+}

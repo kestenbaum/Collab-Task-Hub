@@ -1,8 +1,10 @@
-import { BASE_STYLES, VARIANT_STYLES } from '../config/styles';
+import { forwardRef } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { forwardRef } from 'react';
+
 import { ButtonProps } from '@/shared/types';
+
+import { BASE_STYLES, VARIANT_STYLES } from '../config/styles';
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const { children, isLoading, variant = 'primary', className, disabled, ...otherProps } = props;

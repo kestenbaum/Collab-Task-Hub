@@ -1,13 +1,20 @@
 'use client';
 
+import { useModal } from '@/features/modal/hooks/useModal';
+import { Loader } from '@/shared/ui/Loader';
+import { Wrapper } from '@/shared/ui/Wrapper';
+
 export default function Page() {
+  const { openModal } = useModal();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
+      <div className="w-full rounded-xl bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-2xl font-bold text-gray-800 text-center">Login</h1>
         <div className="container bg-bg-main">
           <div className="bg-bg-white p-6 rounded-lg shadow-sm">
             <h1>Header h1</h1>
+            <Loader />
             <p className="text-txt-main mt-2">text text text</p>
             <p className="text-txt-warning mt-2">warning</p>
             <p className="text-txt-success mt-2">success</p>
@@ -27,6 +34,34 @@ export default function Page() {
             <div className="border-default p-4">Content</div>
             <input className="input" placeholder="Hallo" />
           </div>
+        </div>
+
+        <button
+          className="btn btn-primary"
+          onClick={() =>
+            openModal(
+              <div className="w-[320px]">
+                <h3>Test modal</h3>
+                <p className="mt-2">Content ...........</p>
+              </div>,
+            )
+          }
+        >
+          Popup
+        </button>
+
+        {/* Wrapper example */}
+        <div className="mt-4">
+          <Wrapper>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+              dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+              mollit anim id est laborum.
+            </p>
+          </Wrapper>
         </div>
       </div>
     </div>

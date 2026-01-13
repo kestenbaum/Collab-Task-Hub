@@ -156,6 +156,83 @@ Collab-Task-Hub/
 
 ## 🔐 API-Dokumentation
 
+### Authentifizierung
+
+Das Backend verwendet JWT (JSON Web Tokens) für die Authentifizierung und bietet zusätzlich eine LocalStrategy für Email/Passwort-basierte Anmeldung.
+
+#### Authentifizierungs-Strategien
+
+**JWT Strategy**
+
+- Authentifizierung über Bearer Token im Authorization Header
+- Token wird bei Login/Registrierung ausgestellt
+- Gültigkeitsdauer: 24 Stunden
+
+**Local Strategy**
+
+- Email/Passwort-basierte Authentifizierung
+- Verwendet `passport-local` mit Email als Username-Feld
+- Validiert Credentials über den AuthService
+
+#### Auth-Endpunkte
+
+**Registrierung**
+
+```http
+POST /auth/register
+
+{
+  "email": "user@example.com",
+  "name": "John Doe",
+  "password": "securePassword123"
+}
+```
+
+**Login**
+
+```http
+POST /auth/login
+
+{
+  "email": "user@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Antwort (Login/Registrierung)**
+
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "email": "user@example.com",
+    "name": "John Doe"
+  }
+}
+```
+
+**Aktuellen Benutzer abrufen**
+
+```http
+GET /auth/me
+Authorization: Bearer <token>
+```
+
+**Antwort**
+
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "createdAt": "2026-01-12T10:30:00Z",
+  "updatedAt": "2026-01-12T10:30:00Z"
+}
+```
+
+**Wichtig**: Der `/auth/me` Endpunkt gibt bewusst **keine Passwort-Informationen** zurück. Der `passwordHash` wird serverseitig gefiltert.
+
 ### Projekt-Management (RBAC)
 
 Das Projekt-Modul implementiert vollständige CRUD-Operationen mit rollenbasierter Zugriffskontrolle (RBAC). Wenn ein Benutzer ein Projekt erstellt, wird er automatisch als Administrator zugewiesen.
