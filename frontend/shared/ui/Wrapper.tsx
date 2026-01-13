@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react';
-
 import { WrapperProps } from '@/shared/types';
 
 export const Wrapper = ({ children }: WrapperProps) => {

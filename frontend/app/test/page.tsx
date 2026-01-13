@@ -1,6 +1,7 @@
 'use client';
 
 import { useModal } from '@/features/modal/hooks/useModal';
+import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function Page() {
@@ -13,6 +14,7 @@ export default function Page() {
         <div className="container bg-bg-main">
           <div className="bg-bg-white p-6 rounded-lg shadow-sm">
             <h1>Header h1</h1>
+            <Loader />
             <p className="text-txt-main mt-2">text text text</p>
             <p className="text-txt-warning mt-2">warning</p>
             <p className="text-txt-success mt-2">success</p>
