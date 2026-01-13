@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
@@ -10,13 +9,7 @@ import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuth, logoutUser } = useStoreAuth();
-
-  useEffect(() => {
-    if (!isAuth) {
-      router.push('/login');
-    }
-  }, [isAuth, router]);
+  const { user, logoutUser } = useStoreAuth();
 
   const handleLogout = () => {
     logoutUser();
