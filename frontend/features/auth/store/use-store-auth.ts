@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { authServices } from '@/features/auth/api/services/authServices';
+import { userServices } from '@/features/user/api/services/userServices';
 import { AuthState } from '@/features/auth/types';
+import { UpdateUserDto } from '@/features/user/types';
 
 export const useStoreAuth = create<AuthState>((set) => ({
   user: null,
@@ -36,6 +38,18 @@ export const useStoreAuth = create<AuthState>((set) => ({
     } catch (err) {
       set({ user: null, isAuth: false, isLoading: false });
       localStorage.removeItem('access_token');
+    }
+  },
+
+  updateUser: async (data: UpdateUserDto) => {
+    set({ isLoading: true });
+    try {
+      const updatedUser = await userServices.updateProfile(data);
+      set({ user: updatedUser, isLoading: false });
+      return updatedUser;
+    } catch (err) {
+      set({ isLoading: false });
+      throw err;
     }
   },
 }));
