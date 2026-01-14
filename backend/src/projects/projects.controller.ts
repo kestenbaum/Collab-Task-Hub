@@ -47,6 +47,11 @@ export class ProjectsController {
     return this.projectsService.findAll(userId);
   }
 
+  @Get('all')
+  findAllProjects() {
+    return this.projectsService.findAllProjects();
+  }
+
   /**
    * Get a single project by ID
    * GET /projects/:id
