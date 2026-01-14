@@ -10,6 +10,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import {
   CreateProjectDto,
@@ -20,6 +26,8 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
+@ApiTags('projects')
+@ApiBearerAuth()
 @Controller('projects')
 @UseGuards(JwtAuthGuard)
 export class ProjectsController {
@@ -47,7 +55,17 @@ export class ProjectsController {
     return this.projectsService.findAll(userId);
   }
 
+  /**
+   * Get all projects (admin endpoint)
+   * GET /projects/all
+   */
   @Get('all')
+  @ApiOperation({
+    summary: 'Get all projects',
+    description: 'Retrieve all projects in the system (admin/debug endpoint)',
+  })
+  @ApiResponse({ status: 200, description: 'Returns all projects' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   findAllProjects() {
     return this.projectsService.findAllProjects();
   }
