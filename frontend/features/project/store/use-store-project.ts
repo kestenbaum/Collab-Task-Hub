@@ -1,17 +1,7 @@
 import { create } from 'zustand';
 
 import { projectServices } from '@/features/project/api/services/projectServices';
-import type { Project } from '@/features/project/types';
-
-export type ProjectStore = {
-  projects: Project[];
-  isLoading: boolean;
-  error: string | null;
-
-  clearError: () => void;
-  getProjects: () => Promise<void>;
-  createProject: (data: { title: string; description?: string }) => Promise<void>;
-};
+import { ProjectStore } from '@/features/project/types';
 
 export const useStoreProject = create<ProjectStore>((set, get) => ({
   projects: [],
@@ -25,34 +15,35 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
       set({ isLoading: true, error: null });
 
       const data = await projectServices.getProjects();
-
-      set({
-        projects: data,
-        isLoading: false,
-      });
+      set({ projects: data, isLoading: false });
     } catch (e) {
       set({
         isLoading: false,
         error: e instanceof Error ? e.message : 'Failed to load projects',
       });
+      throw e;
     }
   },
 
   createProject: async (data) => {
+    set({ isLoading: true, error: null });
     try {
-      set({ isLoading: true, error: null });
-
       const created = await projectServices.createProject(data);
 
       set({
         projects: [created, ...get().projects],
-        isLoading: false,
       });
+
+      return created;
     } catch (e) {
       set({
         isLoading: false,
         error: e instanceof Error ? e.message : 'Failed to create project',
       });
+
+      throw e;
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+
 import { FormWrapperProps } from '@/shared/types';
 
 export const FormWrapper: FC<FormWrapperProps> = ({ children, ...rest }) => {

@@ -1,17 +1,34 @@
+'use client';
+
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+import { useModal } from '@/features/modal/hooks/useModal';
+import { useProjects } from '@/features/project/hooks/useProject';
 import { CreateFormData, createFormSchema } from '@/features/project/schemas/project.schema';
 import { Button, FormWrapper, Input } from '@/shared/ui';
 
 const CreateForm = () => {
-  const { register, handleSubmit } = useForm<CreateFormData>({
+  const { createProject, isLoading } = useProjects();
+  const { closeModal } = useModal();
+
+  const { register, handleSubmit, reset } = useForm<CreateFormData>({
     resolver: zodResolver(createFormSchema),
   });
 
-  const onSubmit = (data: CreateFormData) => {
+  const onSubmit = async (data: CreateFormData) => {
     console.log('Data:', data);
+    try {
+      await createProject({
+        title: data.title,
+        description: data.description,
+      });
+      reset();
+      closeModal();
+    } catch (e) {
+      throw e;
+    }
   };
 
   return (
@@ -20,7 +37,7 @@ const CreateForm = () => {
         <div className="flex flex-wrap gap-2.5">
           <Input type="text" placeholder="Write title..." {...register('title')} />
           <Input type="text" placeholder="Write title..." {...register('description')} />
-          <Button>Add new Task</Button>
+          <Button type="submit">{isLoading ? 'Creating…' : 'Create project'}</Button>
         </div>
       </FormWrapper>
     </div>
