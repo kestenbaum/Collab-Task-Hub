@@ -27,9 +27,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @ApiTags('projects')
-@ApiBearerAuth()
 @Controller('projects')
-@UseGuards(JwtAuthGuard)
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
@@ -38,6 +36,8 @@ export class ProjectsController {
    * POST /projects
    */
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createProjectDto: CreateProjectDto,
@@ -51,6 +51,8 @@ export class ProjectsController {
    * GET /projects
    */
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findAll(@CurrentUser('id') userId: string) {
     return this.projectsService.findAll(userId);
   }
@@ -65,7 +67,6 @@ export class ProjectsController {
     description: 'Retrieve all projects in the system (admin/debug endpoint)',
   })
   @ApiResponse({ status: 200, description: 'Returns all projects' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   findAllProjects() {
     return this.projectsService.findAllProjects();
   }
@@ -75,6 +76,8 @@ export class ProjectsController {
    * GET /projects/:id
    */
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   async findOne(@Param('id') id: string, @CurrentUser('id') userId: string) {
     const project = await this.projectsService.findOne(id);
 
@@ -92,6 +95,8 @@ export class ProjectsController {
    * PATCH /projects/:id
    */
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
@@ -105,6 +110,8 @@ export class ProjectsController {
    * DELETE /projects/:id
    */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
     await this.projectsService.remove(id, userId);
@@ -115,6 +122,8 @@ export class ProjectsController {
    * POST /projects/:id/members
    */
   @Post(':id/members')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   addMember(
     @Param('id') projectId: string,
@@ -129,6 +138,8 @@ export class ProjectsController {
    * DELETE /projects/:id/members/:memberId
    */
   @Delete(':id/members/:memberId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeMember(
     @Param('id') projectId: string,
@@ -143,6 +154,8 @@ export class ProjectsController {
    * PATCH /projects/:id/members/:memberId
    */
   @Patch(':id/members/:memberId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   updateMemberRole(
     @Param('id') projectId: string,
     @Param('memberId') memberId: string,
@@ -162,6 +175,8 @@ export class ProjectsController {
    * GET /projects/:id/role
    */
   @Get(':id/role')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   getUserRole(
     @Param('id') projectId: string,
     @CurrentUser('id') userId: string,
