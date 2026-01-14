@@ -18,7 +18,6 @@ const CreateForm = () => {
   });
 
   const onSubmit = async (data: CreateFormData) => {
-    console.log('Data:', data);
     try {
       await createProject({
         title: data.title,
@@ -27,7 +26,7 @@ const CreateForm = () => {
       reset();
       closeModal();
     } catch (e) {
-      throw e;
+      console.error(e);
     }
   };
 
