@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, FormWrapper, Input } from '@/shared/ui';
-import { useForm } from 'react-hook-form';
-import { CreateFormData, createFormSchema } from '@/features/project/schemas/project.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+import { CreateFormData, createFormSchema } from '@/features/project/schemas/project.schema';
+import { Button, FormWrapper, Input } from '@/shared/ui';
 
 const CreateForm = () => {
   const { register, handleSubmit } = useForm<CreateFormData>({
