@@ -16,7 +16,7 @@ export interface ProjectStore {
   error: string | null;
 
   getProjects: () => Promise<void>;
-  createProject: (data: { title: string; description: string }) => Promise<void>;
+  createProject: (data: CreateProjectDto) => Promise<Project>;
   clearError: () => void;
 }
 
