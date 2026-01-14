@@ -93,7 +93,6 @@ export default function ProfilePage() {
         updateData.password = data.password;
       }
 
-      // если изменений нет — просто выходим из edit mode
       if (Object.keys(updateData).length === 0) {
         setIsEditMode(false);
         return;
