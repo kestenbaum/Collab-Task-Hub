@@ -19,7 +19,7 @@ export default function Home() {
     console.log('Join project:', projectId);
   };
 
-  const { projects, isLoading, error, getProjects, createProject } = useProjects();
+  const { projects, error, getProjects } = useProjects();
 
   useEffect(() => {
     getProjects();
@@ -58,9 +58,7 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {isLoading ? <Loader /> : null}
-
-        {mockProjects.map((project) => (
+        {projects.map((project) => (
           <Link key={project.id} href={`/project/${project.id}`} className="block">
             <ProjectCard project={project} isAuth={isAuth} onJoin={handleJoin} />
           </Link>

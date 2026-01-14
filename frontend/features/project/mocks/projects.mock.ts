@@ -3,7 +3,7 @@ import { Project } from '@/features/project/types';
 export const mockProjects: Project[] = [
   {
     id: '1',
-    title: 'Collab Task Hub',
+    title: 'Collab Task Hubeeeeeeeeeee',
     description: 'Platform for collaborative task management with real-time communication.',
   },
   {
