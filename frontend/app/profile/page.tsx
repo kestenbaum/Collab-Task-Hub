@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
-import { updateProfileSchema, UpdateProfileFormData } from '@/features/user/schemas/user.schema';
+import { UpdateProfileFormData, updateProfileSchema } from '@/features/user/schemas/user.schema';
+import { UpdateUserDto } from '@/features/user/types';
 import { Button, Input } from '@/shared/ui';
 import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
@@ -14,6 +15,7 @@ import { Wrapper } from '@/shared/ui/Wrapper';
 export default function ProfilePage() {
   const router = useRouter();
   const { user, logoutUser, updateUser, isLoading } = useStoreAuth();
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -26,11 +28,33 @@ export default function ProfilePage() {
   } = useForm<UpdateProfileFormData>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      name: user?.name || '',
-      email: user?.email || '',
+      name: '',
+      email: '',
       password: '',
     },
   });
+
+  useEffect(() => {
+    if (!user) return;
+
+    reset({
+      name: user.name,
+      email: user.email,
+      password: '',
+    });
+  }, [user, reset]);
+
+  const initialName = useMemo(() => {
+    if (!user?.name) return 'U';
+    return user.name.trim()[0]?.toUpperCase() ?? 'U';
+  }, [user]);
+
+  useEffect(() => {
+    if (!updateSuccess) return;
+
+    const id = setTimeout(() => setUpdateSuccess(false), 3000);
+    return () => clearTimeout(id);
+  }, [updateSuccess]);
 
   const handleLogout = () => {
     logoutUser();
@@ -38,17 +62,16 @@ export default function ProfilePage() {
   };
 
   const handleEditToggle = () => {
-    if (isEditMode) {
-      // Cancel edit - reset form to current user values
+    if (isEditMode && user) {
       reset({
-        name: user?.name || '',
-        email: user?.email || '',
+        name: user.name,
+        email: user.email,
         password: '',
       });
       setUpdateError(null);
       setUpdateSuccess(false);
     }
-    setIsEditMode(!isEditMode);
+    setIsEditMode((prev) => !prev);
   };
 
   const onSubmit = async (data: UpdateProfileFormData) => {
@@ -56,13 +79,20 @@ export default function ProfilePage() {
     setUpdateSuccess(false);
 
     try {
-      // Only send non-empty fields
-      const updateData: any = {};
-      if (data.name && data.name !== user?.name) updateData.name = data.name;
-      if (data.email && data.email !== user?.email) updateData.email = data.email;
-      if (data.password) updateData.password = data.password;
+      const updateData: UpdateUserDto = {};
 
-      // If no changes, exit edit mode
+      if (data.name && data.name !== user?.name) {
+        updateData.name = data.name;
+      }
+
+      if (data.email && data.email !== user?.email) {
+        updateData.email = data.email;
+      }
+
+      if (data.password) {
+        updateData.password = data.password;
+      }
+
       if (Object.keys(updateData).length === 0) {
         setIsEditMode(false);
         return;
@@ -70,14 +100,12 @@ export default function ProfilePage() {
 
       await updateUser(updateData);
 
-      // If password was changed, log out and redirect to login
       if (updateData.password) {
         logoutUser();
         router.push('/login');
         return;
       }
 
-      // Reset password field after successful update
       reset({
         name: data.name,
         email: data.email,
@@ -86,11 +114,8 @@ export default function ProfilePage() {
 
       setUpdateSuccess(true);
       setIsEditMode(false);
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setUpdateSuccess(false), 3000);
-    } catch (error: any) {
-      setUpdateError(error.response?.data?.message || 'Failed to update profile');
+    } catch (error) {
+      setUpdateError(error instanceof Error ? error.message : 'Failed to update profile');
     }
   };
 
@@ -98,14 +123,12 @@ export default function ProfilePage() {
     return <Loader />;
   }
 
-  const initialName = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
-
   return (
     <section className="min-h-[calc(100vh-77px-4rem)] bg-bg-main pt-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Wrapper className="flex flex-col items-center p-10 text-center md:items-start md:text-left h-full">
           <div className="mb-6">
-            <span className="border-2 border-border-default flex h-24 w-24 items-center justify-center rounded-full text-2xl font-bold bg-white text-(--color-text-main) shadow-sm">
+            <span className="border-2 border-border-default flex h-24 w-24 items-center justify-center rounded-full text-2xl font-bold bg-white shadow-sm">
               {initialName}
             </span>
           </div>
@@ -141,7 +164,6 @@ export default function ProfilePage() {
                   type="text"
                   {...register('name')}
                   error={errors.name?.message}
-                  placeholder="Enter your name"
                 />
 
                 <Input
@@ -149,7 +171,6 @@ export default function ProfilePage() {
                   type="email"
                   {...register('email')}
                   error={errors.email?.message}
-                  placeholder="Enter your email"
                 />
 
                 <Input
@@ -157,29 +178,24 @@ export default function ProfilePage() {
                   type="password"
                   {...register('password')}
                   error={errors.password?.message}
-                  placeholder="Leave empty to keep current password"
                   helperText="Leave empty to keep your current password"
                 />
 
-                <div className="flex gap-3 pt-2">
-                  <Button type="submit" variant="primary" className="flex-1" disabled={isLoading}>
-                    {isLoading ? 'Saving...' : 'Save Changes'}
-                  </Button>
-                </div>
+                <Button type="submit" variant="primary" disabled={isLoading}>
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </Button>
               </form>
             ) : (
               <div className="space-y-2">
-                <p className="flex justify-between md:block">
-                  <span className="text-sm font-medium text-gray-500 block uppercase tracking-wider">
-                    Name
-                  </span>
-                  <span className="text-lg text-gray-800">{user.name}</span>
+                <p>
+                  <span className="text-sm text-gray-500">Name</span>
+                  <br />
+                  <span className="text-lg">{user.name}</span>
                 </p>
-                <p className="flex justify-between md:block border-t md:border-none pt-2 md:pt-0">
-                  <span className="text-sm font-medium text-gray-500 block uppercase tracking-wider">
-                    Email
-                  </span>
-                  <span className="text-lg text-gray-800">{user.email}</span>
+                <p>
+                  <span className="text-sm text-gray-500">Email</span>
+                  <br />
+                  <span className="text-lg">{user.email}</span>
                 </p>
               </div>
             )}
@@ -188,25 +204,13 @@ export default function ProfilePage() {
 
         <Wrapper className="flex flex-col h-full p-10 justify-between">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 border-b pb-2">
-              Current Activity
-            </h2>
-            <div className="bg-gray-50 rounded-lg p-4 border border-dashed border-gray-300">
-              <p className="text-gray-500 italic">
-                User Project: <span className="font-medium text-gray-700 not-italic">null</span>
-              </p>
-            </div>
+            <h2 className="text-2xl font-semibold mb-6 border-b pb-2">Current Activity</h2>
+            <p className="text-gray-500 italic">No active project</p>
           </div>
 
-          <div className="mt-auto pt-6">
-            <Button
-              onClick={handleLogout}
-              variant="danger"
-              className="w-full py-3 text-lg font-medium transition-transform active:scale-[0.98]"
-            >
-              Logout from Account
-            </Button>
-          </div>
+          <Button onClick={handleLogout} variant="danger" className="w-full py-3 text-lg">
+            Logout from Account
+          </Button>
         </Wrapper>
       </div>
     </section>
