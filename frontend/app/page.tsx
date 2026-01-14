@@ -7,7 +7,6 @@ import { useModal } from '@/features/modal/hooks/useModal';
 import { CreateForm } from '@/features/project/components';
 import { ProjectCard } from '@/features/project/components/ProjectCard';
 import { useProjects } from '@/features/project/hooks/useProject';
-import { mockProjects } from '@/features/project/mocks/projects.mock';
 import { Button } from '@/shared/ui';
 import { Loader } from '@/shared/ui/Loader';
 
@@ -19,11 +18,21 @@ export default function Home() {
     console.log('Join project:', projectId);
   };
 
-  const { projects, error, getProjects } = useProjects();
+  const { projects, error, isLoading, getProjects } = useProjects();
 
   useEffect(() => {
     getProjects();
-  }, [getProjects]);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className="mt-8">
+        <div className="container flex justify-center py-10">
+          <Loader />
+        </div>
+      </section>
+    );
+  }
 
   if (error)
     return (
@@ -34,6 +43,7 @@ export default function Home() {
         </button>
       </div>
     );
+
   return (
     <section className="mt-8">
       <div className="mb-6 flex items-center justify-between">
@@ -65,25 +75,5 @@ export default function Home() {
         ))}
       </div>
     </section>
-    // <section>
-    //   <div className="flex items-center justify-end w-full pt-2.5">
-    //     {isAuth ? (
-    //       <Button
-    //         variant="primary"
-    //         onClick={() =>
-    //           openModal(
-    //             <div className="w-[320px]">
-    //               <h3 className="mb-2.5">Create Task</h3>
-    //               <p className="mt-2">Add task form</p>
-    //               <CreateForm />
-    //             </div>,
-    //           )
-    //         }
-    //       >
-    //         Create
-    //       </Button>
-    //     ) : null}
-    //   </div>
-    // </section>
   );
 }
