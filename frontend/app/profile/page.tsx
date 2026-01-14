@@ -70,6 +70,13 @@ export default function ProfilePage() {
 
       await updateUser(updateData);
 
+      // If password was changed, log out and redirect to login
+      if (updateData.password) {
+        logoutUser();
+        router.push('/login');
+        return;
+      }
+
       // Reset password field after successful update
       reset({
         name: data.name,
