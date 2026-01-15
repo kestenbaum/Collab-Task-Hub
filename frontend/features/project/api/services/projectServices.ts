@@ -23,6 +23,15 @@ class ProjectServices {
       throw e instanceof Error ? e : new Error(String(e));
     }
   }
+
+  public async getProjectById(id: string): Promise<Project> {
+    try {
+      const response = await this.axios.get<Project>(`/projects/${id}`);
+      return response.data;
+    } catch (e: unknown) {
+      throw e instanceof Error ? e : new Error(String(e));
+    }
+  }
 }
 
 export const projectServices = new ProjectServices();
