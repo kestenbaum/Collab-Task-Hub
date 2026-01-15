@@ -11,8 +11,9 @@ import { User } from '../users/user.entity';
 import { Project } from '../projects/project.entity';
 
 export enum TaskStatus {
-  TODO = 'todo',
+  BACKLOG = 'backlog',
   IN_PROGRESS = 'in_progress',
+  REVIEW = 'review',
   DONE = 'done',
 }
 
@@ -36,7 +37,7 @@ export class Task {
   @Column({
     type: 'enum',
     enum: TaskStatus,
-    default: TaskStatus.TODO,
+    default: TaskStatus.BACKLOG,
   })
   status: TaskStatus;
 
