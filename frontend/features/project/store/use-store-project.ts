@@ -5,6 +5,7 @@ import { ProjectStore } from '@/features/project/types';
 
 export const useStoreProject = create<ProjectStore>((set, get) => ({
   projects: [],
+  selectedProject: null,
   isLoading: false,
   error: null,
 
@@ -41,6 +42,21 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
         error: e instanceof Error ? e.message : 'Failed to create project',
       });
 
+      throw e;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  getProjectById: async (id) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const project = await projectServices.getProjectById(id);
+      set({ selectedProject: project });
+      return project;
+    } catch (e) {
+      set({ error: e instanceof Error ? e.message : 'Failed to load project' });
       throw e;
     } finally {
       set({ isLoading: false });

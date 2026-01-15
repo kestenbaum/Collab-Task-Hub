@@ -12,10 +12,12 @@ export interface ProjectCardProps {
 
 export interface ProjectStore {
   projects: Project[];
+  selectedProject: Project | null;
   isLoading: boolean;
   error: string | null;
 
   getProjects: () => Promise<void>;
+  getProjectById: (id: string) => Promise<Project>;
   createProject: (data: CreateProjectDto) => Promise<Project>;
   clearError: () => void;
 }
