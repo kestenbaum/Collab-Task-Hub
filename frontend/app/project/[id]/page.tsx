@@ -5,7 +5,9 @@ import { useParams } from 'next/navigation';
 
 import { ProjectDetails } from '@/features/project/components/ProjectDetails';
 import { useProjects } from '@/features/project/hooks/useProject';
+import { Tabs } from '@/features/tabs/components';
 import { Loader } from '@/shared/ui/Loader';
+import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function ProjectPage() {
   const params = useParams<{ id: string }>();
@@ -37,12 +39,15 @@ export default function ProjectPage() {
   }
 
   return (
-    <section className="mt-8">
+    <section className="flex flex-col mt-8 gap-2.5">
       <div className="container">
         {isLoading ? <Loader /> : null}
         {errorMessage}
         {selectedProject ? <ProjectDetails project={selectedProject} /> : null}
       </div>
+      <Wrapper>
+        <Tabs />
+      </Wrapper>
     </section>
   );
 }
