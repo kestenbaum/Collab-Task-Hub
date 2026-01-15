@@ -24,6 +24,7 @@ export interface AuthState {
   user: UserDto | null;
   isAuth: boolean;
   isLoading: boolean;
+  authError: string | null;
   loginUser: (data: LoginDto) => Promise<void>;
   registerUser: (data: RegisterDto) => Promise<void>;
   logoutUser: () => void;

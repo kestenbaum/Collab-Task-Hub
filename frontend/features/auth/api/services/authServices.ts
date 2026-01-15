@@ -15,12 +15,8 @@ class AuthServices {
   }
 
   public async loginUser(data: LoginDto): Promise<AuthResponseDto> {
-    try {
-      const response = await this.axios.post<AuthResponseDto>('/auth/login', data);
-      return response.data;
-    } catch (e: unknown) {
-      throw e instanceof Error ? e : new Error(String(e));
-    }
+    const response = await this.axios.post<AuthResponseDto>('/auth/login', data);
+    return response.data;
   }
 
   public async getCurrentUser() {
