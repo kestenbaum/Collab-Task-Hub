@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Project } from '../projects/project.entity';
 
 @Entity('users')
 export class User {
@@ -19,6 +21,9 @@ export class User {
 
   @Column()
   passwordHash: string;
+
+  @OneToMany(() => Project, (project) => project.createdBy)
+  createdProjects: Project[];
 
   @CreateDateColumn()
   createdAt: Date;
