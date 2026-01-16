@@ -2,7 +2,7 @@ name: CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
     tags:
       - "v*"
 
@@ -92,7 +92,6 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
-      url: https://${{ secrets.PRODUCTION_DOMAIN }}
 
     steps:
       - name: Checkout code
