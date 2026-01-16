@@ -3,12 +3,12 @@ import { Button, FormWrapper, Input } from '@/shared/ui';
 import { useForm } from 'react-hook-form';
 import { LoginFormData, loginSchema } from '@/features/auth/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 const LoginForm = () => {
   const router = useRouter();
-  const { loginUser, authError } = useStoreAuth();
+  const { loginUser, authError } = useAuth();
 
   const {
     register,
@@ -22,8 +22,7 @@ const LoginForm = () => {
     try {
       await loginUser(data);
       router.push('/');
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
