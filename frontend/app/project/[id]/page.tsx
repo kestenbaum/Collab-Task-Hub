@@ -13,22 +13,28 @@ export default function ProjectPage() {
   const params = useParams<{ id: string }>();
   const projectId = params.id;
 
-  const { selectedProject, isLoading, error, getProjectById } = useProjects();
+  const { selectedProject, isLoading, error, hasLoadedProject, getProjectById } = useProjects();
 
   useEffect(() => {
     if (!projectId) return;
     getProjectById(projectId);
   }, [projectId, getProjectById]);
 
-  const errorMessage = error ? (
-    <div className="rounded-md border border-red-200 bg-red-50 p-4">
-      <p className="text-sm text-red-700">{error}</p>
-    </div>
-  ) : null;
+  if (isLoading) {
+    return <Loader />;
+  }
 
-  const showNotFound = !isLoading && !error && !selectedProject;
+  if (error) {
+    return (
+      <div className="container mt-8">
+        <div className="rounded-md border border-red-200 bg-red-50 p-4">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
-  if (showNotFound) {
+  if (hasLoadedProject && !selectedProject) {
     return (
       <section className="mt-8">
         <div className="container py-6">
@@ -38,13 +44,16 @@ export default function ProjectPage() {
     );
   }
 
+  if (!selectedProject) {
+    return <Loader />;
+  }
+
   return (
-    <section className="flex flex-col mt-8 gap-2.5">
+    <section className="mt-8 flex flex-col gap-2.5">
       <div className="container">
-        {isLoading ? <Loader /> : null}
-        {errorMessage}
-        {selectedProject ? <ProjectDetails project={selectedProject} /> : null}
+        <ProjectDetails project={selectedProject} />
       </div>
+
       <Wrapper>
         <Tabs />
       </Wrapper>

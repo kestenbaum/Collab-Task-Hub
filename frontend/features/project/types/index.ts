@@ -15,6 +15,7 @@ export interface ProjectStore {
   selectedProject: Project | null;
   isLoading: boolean;
   error: string | null;
+  hasLoadedProject: boolean;
 
   getProjects: () => Promise<void>;
   getProjectById: (id: string) => Promise<Project>;

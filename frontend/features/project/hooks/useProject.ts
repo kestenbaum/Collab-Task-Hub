@@ -5,6 +5,7 @@ export const useProjects = () => {
   const selectedProject = useStoreProject((s) => s.selectedProject);
   const isLoading = useStoreProject((s) => s.isLoading);
   const error = useStoreProject((s) => s.error);
+  const hasLoadedProject = useStoreProject((s) => s.hasLoadedProject);
 
   const getProjects = useStoreProject((s) => s.getProjects);
   const getProjectById = useStoreProject((s) => s.getProjectById);
@@ -16,6 +17,7 @@ export const useProjects = () => {
     selectedProject,
     isLoading,
     error,
+    hasLoadedProject,
     getProjects,
     getProjectById,
     createProject,
