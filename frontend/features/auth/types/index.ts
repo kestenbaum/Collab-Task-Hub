@@ -1,7 +1,10 @@
+import { Project } from '@/features/project/types';
+
 export interface UserDto {
   id: string;
   email: string;
   name: string;
+  createdProjects: Project[];
 }
 
 export interface RegisterDto {
