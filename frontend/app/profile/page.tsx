@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
+import ProfileName from '@/features/project/components/ProfileName';
+import ProfileProjects from '@/features/project/components/ProfileProjects';
 import { UpdateProfileFormData, updateProfileSchema } from '@/features/user/schemas/user.schema';
 import { UpdateUserDto } from '@/features/user/types';
 import { Button, Input } from '@/shared/ui';
@@ -42,11 +44,6 @@ export default function ProfilePage() {
       password: '',
     });
   }, [user, reset]);
-
-  const initialName = useMemo(() => {
-    if (!user?.name) return 'U';
-    return user.name.trim()[0]?.toUpperCase() ?? 'U';
-  }, [user]);
 
   useEffect(() => {
     if (!updateSuccess) return;
@@ -121,16 +118,11 @@ export default function ProfilePage() {
   if (!user) {
     return <Loader />;
   }
-  console.log(user.createdProjects);
   return (
     <section className="min-h-[calc(100vh-77px-4rem)] bg-bg-main pt-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Wrapper className="flex flex-col items-center p-10 text-center md:items-start md:text-left h-full">
-          <div className="mb-6">
-            <span className="border-2 border-border-default flex h-24 w-24 items-center justify-center rounded-full text-2xl font-bold bg-white shadow-sm">
-              {initialName}
-            </span>
-          </div>
+          <ProfileName />
 
           <div className="space-y-4 w-full">
             <div className="flex justify-between items-center border-b pb-2">
@@ -201,26 +193,7 @@ export default function ProfilePage() {
           </div>
         </Wrapper>
 
-        <Wrapper className="flex flex-col h-full p-10 justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold mb-6 border-b pb-2">Current Activity</h2>
-            {user.createdProjects?.length > 0 ? (
-              <ul className="flex flex-col gap-2.5 mb-2.5">
-                {user.createdProjects.map((project) => (
-                  <li key={project.id}>
-                    <Wrapper>{project.title}</Wrapper>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500 italic">No active project</p>
-            )}
-          </div>
-
-          <Button onClick={handleLogout} variant="danger" className="w-full py-3 text-lg">
-            Logout from Account
-          </Button>
-        </Wrapper>
+        <ProfileProjects user={user} handleLogout={handleLogout} />
       </div>
     </section>
   );
