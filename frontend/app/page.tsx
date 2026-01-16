@@ -1,7 +1,8 @@
 'use client';
 import { useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
+import { AuthRequiredModal } from '@/features/auth/components/AuthRequiredModal';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useModal } from '@/features/modal/hooks/useModal';
 import { CreateForm } from '@/features/project/components';
@@ -11,12 +12,9 @@ import { Button } from '@/shared/ui';
 import { Loader } from '@/shared/ui/Loader';
 
 export default function Home() {
+  const router = useRouter();
   const { openModal } = useModal();
   const { isAuth } = useAuth();
-
-  const handleJoin = (projectId: string) => {
-    console.log('Join project:', projectId);
-  };
 
   const { projects, error, isLoading, getProjects } = useProjects();
 
@@ -24,13 +22,23 @@ export default function Home() {
     getProjects();
   }, []);
 
+  const handleJoin = (projectId: string) => {
+    console.log('Join project:', projectId);
+  };
+
+  const handleOpenProject = (id: string) => {
+    if (!isAuth) {
+      openModal(<AuthRequiredModal />);
+      return;
+    }
+    router.push(`/project/${id}`);
+  };
+
   if (isLoading) {
     return (
-      <section className="mt-8">
-        <div className="container flex justify-center py-10">
-          <Loader />
-        </div>
-      </section>
+      <div className="container mt-8">
+        <Loader />
+      </div>
     );
   }
 
@@ -69,9 +77,13 @@ export default function Home() {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
-          <Link key={project.id} href={`/project/${project.id}`} className="block">
+          <div
+            key={project.id}
+            className="block cursor-pointer"
+            onClick={() => handleOpenProject(project.id)}
+          >
             <ProjectCard project={project} isAuth={isAuth} onJoin={handleJoin} />
-          </Link>
+          </div>
         ))}
       </div>
     </section>

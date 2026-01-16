@@ -112,6 +112,9 @@
     cursor: not-allowed;
   }
 
+  .btn-access {
+  }
+
   .border-default {
     border: 1px solid var(--color-border-default);
     border-radius: var(--radius-default);

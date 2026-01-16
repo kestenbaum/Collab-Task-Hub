@@ -8,6 +8,7 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
   selectedProject: null,
   isLoading: false,
   error: null,
+  hasLoadedProject: false,
 
   clearError: () => set({ error: null }),
 
@@ -49,14 +50,17 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
   },
 
   getProjectById: async (id) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, hasLoadedProject: false, selectedProject: null });
 
     try {
       const project = await projectServices.getProjectById(id);
-      set({ selectedProject: project });
+      set({ selectedProject: project, hasLoadedProject: true });
       return project;
     } catch (e) {
-      set({ error: e instanceof Error ? e.message : 'Failed to load project' });
+      set({
+        error: e instanceof Error ? e.message : 'Failed to load project',
+        hasLoadedProject: true,
+      });
       throw e;
     } finally {
       set({ isLoading: false });
