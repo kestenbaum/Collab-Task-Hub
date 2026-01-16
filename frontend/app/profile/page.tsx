@@ -121,7 +121,7 @@ export default function ProfilePage() {
   if (!user) {
     return <Loader />;
   }
-
+  console.log(user.createdProjects);
   return (
     <section className="min-h-[calc(100vh-77px-4rem)] bg-bg-main pt-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -204,7 +204,17 @@ export default function ProfilePage() {
         <Wrapper className="flex flex-col h-full p-10 justify-between">
           <div>
             <h2 className="text-2xl font-semibold mb-6 border-b pb-2">Current Activity</h2>
-            <p className="text-gray-500 italic">No active project</p>
+            {user.createdProjects?.length > 0 ? (
+              <ul className="flex flex-col gap-2.5 mb-2.5">
+                {user.createdProjects.map((project) => (
+                  <li key={project.id}>
+                    <Wrapper>{project.title}</Wrapper>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 italic">No active project</p>
+            )}
           </div>
 
           <Button onClick={handleLogout} variant="danger" className="w-full py-3 text-lg">
