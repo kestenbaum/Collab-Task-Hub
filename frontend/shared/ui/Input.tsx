@@ -4,18 +4,17 @@ import { InputProps } from '@/shared/types';
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, helperText, className, ...props }, ref) => {
     return (
-      <div className="flex flex-col gap-1.5 w-full">
+      <div className="flex flex-col gap-1.5">
         {label && <label className="text-sm font-medium text-gray-700">{label}</label>}
 
         <input
           ref={ref}
           className={`
-              bg-[var(--color-input-bg)] 
-              border-[var(--color-input-border)] 
-              text-[var(--color-input-text)]
-              placeholder-[var(--color-input-placeholder)]
-              /* Скругление инпута */
-              rounded-[var(--radius-input)]
+              bg-(--color-input-bg) 
+              border-input-border 
+              text-(--color-input-text)
+              placeholder-(--color-input-placeholder)
+              rounded-(--radius-input)
               border
               py-2.5
               px-4.5

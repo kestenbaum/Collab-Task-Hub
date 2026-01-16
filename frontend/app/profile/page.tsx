@@ -15,7 +15,6 @@ import { Wrapper } from '@/shared/ui/Wrapper';
 export default function ProfilePage() {
   const router = useRouter();
   const { user, logoutUser, updateUser, isLoading } = useStoreAuth();
-
   const [isEditMode, setIsEditMode] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
