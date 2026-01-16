@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useModal } from '@/features/modal/hooks/useModal';
 import { useProjects } from '@/features/project/hooks/useProject';
 import { CreateFormData, createFormSchema } from '@/features/project/schemas/project.schema';
-import { Button, FormWrapper, Input } from '@/shared/ui';
+import { Button, Input } from '@/shared/ui';
 
 const CreateForm = () => {
   const { createProject, isLoading } = useProjects();
@@ -31,14 +31,14 @@ const CreateForm = () => {
   };
 
   return (
-    <div className="w-full max-w-[450px]">
-      <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+    <div className="w-full max-w-112.5">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap gap-2.5">
-          <Input type="text" placeholder="Write title..." {...register('title')} />
-          <Input type="text" placeholder="Write title..." {...register('description')} />
+          <Input type="text" placeholder="Write title" {...register('title')} />
+          <Input type="text" placeholder="Write description" {...register('description')} />
           <Button type="submit">{isLoading ? 'Creating…' : 'Create project'}</Button>
         </div>
-      </FormWrapper>
+      </form>
     </div>
   );
 };

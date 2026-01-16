@@ -5,7 +5,7 @@ const Tabs = () => {
   const { tabs, activeTabIndex, setActiveIndex } = useStoreTabs();
 
   return (
-    <section className="max-w-6xl mx-auto p-8 font-sans text-gray-900">
+    <section className="p-8 font-sans text-gray-900">
       <TabsHeader>Project Menu</TabsHeader>
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <TabsMenu

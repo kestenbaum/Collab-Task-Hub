@@ -19,8 +19,8 @@ export default function Home() {
   const { projects, error, isLoading, getProjects } = useProjects();
 
   useEffect(() => {
-    getProjects();
-  }, []);
+    void getProjects();
+  }, [getProjects]);
 
   const handleJoin = (projectId: string) => {
     console.log('Join project:', projectId);
@@ -64,7 +64,6 @@ export default function Home() {
               openModal(
                 <div className="w-[320px]">
                   <h3 className="mb-2.5">Create Task</h3>
-                  <p className="mt-2">Add task form</p>
                   <CreateForm />
                 </div>,
               )

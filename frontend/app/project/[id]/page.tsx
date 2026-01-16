@@ -50,9 +50,7 @@ export default function ProjectPage() {
 
   return (
     <section className="mt-8 flex flex-col gap-2.5">
-      <div className="container">
-        <ProjectDetails project={selectedProject} />
-      </div>
+      <ProjectDetails project={selectedProject} />
 
       <Wrapper>
         <Tabs />

@@ -3,7 +3,7 @@ import { TabsMenuState } from '@/features/tabs/types';
 
 const TabsMenu: FC<TabsMenuState> = ({ content, activeContentIndex, setActiveContentIndex }) => {
   return (
-    <menu className="flex border-b border-gray-100 bg-gray-50/50 p-2 gap-2">
+    <menu className="flex flex-col gap-2 p-2 border-b border-gray-100 bg-gray-50/50 sm:flex-row sm:items-center sm:gap-4">
       {content.map((tab, index) => (
         <button
           key={tab.id}
