@@ -8,13 +8,23 @@ export const useStoreAuth = create<AuthState>((set) => ({
   user: null,
   isAuth: false,
   isLoading: false,
+  authError: null,
 
   loginUser: async (credentials) => {
-    set({ isLoading: true });
-    const { user, access_token } = await authServices.loginUser(credentials);
+    set({ isLoading: true, authError: null });
+    try {
+      const { user, access_token } = await authServices.loginUser(credentials);
 
-    localStorage.setItem('access_token', access_token);
-    set({ user, isAuth: true, isLoading: false });
+      localStorage.setItem('access_token', access_token);
+      set({ user, isAuth: true, isLoading: false, authError: null });
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === 'object' && 'response' in error
+          ? (error.response as any)?.data?.message || 'Invalid credentials'
+          : 'Invalid credentials';
+      set({ isLoading: false, authError: errorMessage });
+      throw error;
+    }
   },
 
   registerUser: async (data) => {
