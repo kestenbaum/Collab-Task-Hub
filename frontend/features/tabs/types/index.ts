@@ -1,5 +1,9 @@
 import React, { ComponentType } from 'react';
 
+export interface TabsProps {
+  projectId: string;
+}
+
 export interface TabsHeaderProps {
   children: React.ReactNode;
 }
