@@ -23,8 +23,6 @@ export function ProjectDetails({
 }: ProjectDetailsProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Check if current user is admin
   const { canEdit, canDelete } = useProjectRole(project, currentUserId);
 
   const handleSave = async (data: UpdateProjectDto) => {
@@ -75,22 +73,26 @@ export function ProjectDetails({
         </div>
 
         {(canEdit || canDelete) && (
-          <div className="ml-4 flex gap-2">
-            {canEdit && (
-              <Button onClick={() => setIsEditing(true)} className="bg-blue-600 hover:bg-blue-700">
-                Edit
-              </Button>
-            )}
-            {canDelete && (
-              <Button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="bg-red-600 hover:bg-red-700"
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </Button>
-            )}
-          </div>
+          <menu className="ml-4 flex items-center gap-2">
+            <div>
+              {canEdit && (
+                  <Button onClick={() => setIsEditing(true)} variant={"primary"}>
+                    Edit
+                  </Button>
+              )}
+            </div>
+            <div>
+              {canDelete && (
+                  <Button
+                      onClick={handleDelete}
+                      disabled={isDeleting}
+                      variant="danger"
+                  >
+                    {isDeleting ? 'Deleting...' : 'Delete'}
+                  </Button>
+              )}
+            </div>
+          </menu>
         )}
       </div>
     </Wrapper>

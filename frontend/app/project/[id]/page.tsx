@@ -35,7 +35,6 @@ export default function ProjectPage() {
     getProjectById(projectId);
   }, [projectId, getProjectById]);
 
-  //  Example of working with tasks
   useEffect(() => {
     if (!projectId) return;
     getTasks(projectId);
@@ -63,7 +62,7 @@ export default function ProjectPage() {
 
   const handleDeleteProject = async () => {
     await deleteProject(projectId);
-    router.push('/profile'); // Redirect to profile after deletion
+    router.push('/');
   };
   //
 
@@ -104,7 +103,6 @@ export default function ProjectPage() {
         onDelete={handleDeleteProject}
       />
 
-      {/* Example task */}
       <Button className="w-32" onClick={handleAddTask}>
         Add task
       </Button>
@@ -113,7 +111,6 @@ export default function ProjectPage() {
           <TaskCard key={task.id} task={task} onOpen={handleOpen} onDelete={handleDelete} />
         ))}
       </div>
-      {/* .... */}
 
       <Wrapper>
         <Tabs />
