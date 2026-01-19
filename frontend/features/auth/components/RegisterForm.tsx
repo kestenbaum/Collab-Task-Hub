@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { Button, FormWrapper, Input } from '@/shared/ui';
-import { RegisterFormData, registerSchema } from '@/features/auth/schemas/auth.schema';
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useStoreAuth } from '@/features/auth/store/use-store-auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { RegisterFormData, registerSchema } from '@/features/auth/schemas/auth.schema';
+import { Button, FormWrapper, Input } from '@/shared/ui';
 
 const RegisterForm = () => {
   const router = useRouter();
-  const { registerUser } = useStoreAuth();
-  const [apiError, setApiError] = useState<string>('');
+  const { registerUser, authError } = useAuth();
 
   const {
     register,
@@ -22,26 +21,18 @@ const RegisterForm = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      setApiError('');
       await registerUser(data);
       router.push('/');
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response?.data?.message ?? 'Registration failed';
-        setApiError(Array.isArray(message) ? message.join(', ') : message);
-      } else {
-        setApiError('Unexpected error');
-      }
-    }
+    } catch (error) {}
   };
 
   return (
     <FormWrapper className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-      {apiError && (
+      {authError && (
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">{apiError}</h3>
+              <h3 className="text-sm font-medium text-red-800">{authError}</h3>
             </div>
           </div>
         </div>
