@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 
 export interface TabsHeaderProps {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ export interface TabsHeaderProps {
 export interface TabItemProps {
   id: string;
   label: string;
-  data: string[];
+  component: ComponentType;
 }
 
 export interface TabsContentProps {
