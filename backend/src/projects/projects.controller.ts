@@ -175,19 +175,9 @@ export class ProjectsController {
       },
     },
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Not a member of this project' })
   @ApiResponse({ status: 404, description: 'Project not found' })
-  async findOne(@Param('id') id: string, @CurrentUser('id') userId: string) {
-    const project = await this.projectsService.findOne(id);
-
-    // Check if user is a member
-    const isMember = await this.projectsService.checkMembership(id, userId);
-    if (!isMember) {
-      throw new Error('You are not a member of this project');
-    }
-
-    return project;
+  async findOne(@Param('id') id: string) {
+    return this.projectsService.findOne(id);
   }
 
   /**
