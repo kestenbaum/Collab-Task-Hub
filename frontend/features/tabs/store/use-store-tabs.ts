@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { TabItemProps } from '@/features/tabs/types';
-import Board from '@/features/board/Board';
+import Board from '@/features/board/components/Board';
 import Chat from '@/features/chat/components/Chat';
 import UserList from '@/features/user/components/UserList';
 import TaskList from '@/features/task/components/TaskList';
