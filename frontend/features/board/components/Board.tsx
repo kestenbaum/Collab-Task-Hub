@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BoardColumn from '@/features/board/components/BoardColumn';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
 
 export interface ColumnProps {
   id: string;
@@ -49,25 +50,48 @@ const INITIAL_TASKS: TaskProps[] = [
     id: '3',
     title: 'Task 3',
     description: 'description task 3',
-    status: 'IN_PROGRESS',
+    status: 'DONE',
   },
 ];
 
 const Board = () => {
   const [tasks, setTasks] = useState<TaskProps[]>(INITIAL_TASKS);
+
+  function handleDragEnd(e: DragEndEvent) {
+    const { active, over } = e;
+
+    if (!over) return;
+
+    const taskId = active.id as string;
+    const newStatus = over.id as TaskProps['status'];
+
+    setTasks(() =>
+      tasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              status: newStatus,
+            }
+          : task,
+      ),
+    );
+  }
+
   return (
     <div className="bg-slate-100 p-6">
       <div
         className="grid gap-6"
         style={{ gridTemplateColumns: `repeat(${COLUMNS.length}, minmax(0, 1fr))` }}
       >
-        {COLUMNS.map((column) => (
-          <BoardColumn
-            key={column.id}
-            column={column}
-            tasks={tasks.filter((task) => task.status === column.id)}
-          />
-        ))}
+        <DndContext onDragEnd={handleDragEnd}>
+          {COLUMNS.map((column) => (
+            <BoardColumn
+              key={column.id}
+              column={column}
+              tasks={tasks.filter((task) => task.status === column.id)}
+            />
+          ))}
+        </DndContext>
       </div>
     </div>
   );
