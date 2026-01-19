@@ -91,7 +91,7 @@ export default function ProjectPage() {
       {/* .... */}
 
       <Wrapper>
-        <Tabs />
+        <Tabs projectId={projectId} />
       </Wrapper>
     </section>
   );

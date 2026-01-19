@@ -1,5 +1,9 @@
 import React from 'react';
 
+export interface TabsProps {
+  projectId: string;
+}
+
 export interface TabsHeaderProps {
   children: React.ReactNode;
 }
@@ -11,6 +15,7 @@ export interface TabItemProps {
 }
 
 export interface TabsContentProps {
+  projectId: string;
   content: TabItemProps[];
   activeContentIndex: number;
 }
