@@ -1,8 +1,7 @@
 import { TabsContent, TabsHeader, TabsMenu } from '@/features/tabs/components/index';
 import { useStoreTabs } from '@/features/tabs/store/use-store-tabs';
-import { TabsProps } from '@/features/tabs/types';
 
-const Tabs = ({ projectId }: TabsProps) => {
+const Tabs = () => {
   const { tabs, activeTabIndex, setActiveIndex } = useStoreTabs();
 
   return (

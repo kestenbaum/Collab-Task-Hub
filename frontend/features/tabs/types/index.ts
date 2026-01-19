@@ -15,7 +15,6 @@ export interface TabItemProps {
 }
 
 export interface TabsContentProps {
-  projectId: string;
   content: TabItemProps[];
   activeContentIndex: number;
 }

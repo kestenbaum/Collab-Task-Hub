@@ -9,7 +9,7 @@ const TabsContent: FC<TabsContentProps> = ({ content, activeContentIndex }) => {
   if (!activeTab) return null;
   const CurrentComponents = activeTab.component;
   return (
-    <div id="tab-content" className="p-8 min-h-[300px]">
+    <div id="tab-content" className="p-8 min-h-75">
       <h2 className="text-xl font-bold mb-4">{content[activeContentIndex].label}</h2>
       <CurrentComponents />
     </div>
