@@ -76,20 +76,16 @@ export function ProjectDetails({
           <menu className="ml-4 flex items-center gap-2">
             <div>
               {canEdit && (
-                  <Button onClick={() => setIsEditing(true)} variant={"primary"}>
-                    Edit
-                  </Button>
+                <Button onClick={() => setIsEditing(true)} variant={'primary'}>
+                  Edit
+                </Button>
               )}
             </div>
             <div>
               {canDelete && (
-                  <Button
-                      onClick={handleDelete}
-                      disabled={isDeleting}
-                      variant="danger"
-                  >
-                    {isDeleting ? 'Deleting...' : 'Delete'}
-                  </Button>
+                <Button onClick={handleDelete} disabled={isDeleting} variant="danger">
+                  {isDeleting ? 'Deleting...' : 'Delete'}
+                </Button>
               )}
             </div>
           </menu>
