@@ -141,8 +141,6 @@ export class ProjectsController {
    * GET /projects/:id
    */
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get a project by ID',
     description: 'Retrieve detailed information about a specific project',
