@@ -51,6 +51,14 @@ export const useStoreAuth = create<AuthState>((set) => ({
     }
   },
 
+  refreshUser: async () => {
+    try {
+      const user = await authServices.getCurrentUser();
+      set({ user, isAuth: true });
+    } catch (err) {
+    }
+  },
+
   updateUser: async (data: UpdateUserDto) => {
     set({ isLoading: true });
     try {
