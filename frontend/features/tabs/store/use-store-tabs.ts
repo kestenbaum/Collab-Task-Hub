@@ -1,5 +1,9 @@
 import { create } from 'zustand';
 import { TabItemProps } from '@/features/tabs/types';
+import Board from '@/features/board/Board';
+import Chat from '@/features/chat/components/Chat';
+import UserList from '@/features/user/components/UserList';
+import TaskList from '@/features/task/components/TaskList';
 
 interface StoreProps {
   tabs: TabItemProps[];
@@ -9,10 +13,10 @@ interface StoreProps {
 
 export const useStoreTabs = create<StoreProps>((set) => ({
   tabs: [
-    { id: 'tasks', label: 'Tasks', data: ['Task 1', 'Task 2'] },
-    { id: 'board', label: 'Board', data: ['In Progress', 'Done'] },
-    { id: 'chat', label: 'Chat', data: ['General Chat'] },
-    { id: 'users', label: 'Users', data: ['Admin', 'User 1'] },
+    { id: 'tasks', label: 'Tasks', component: TaskList },
+    { id: 'board', label: 'Board', component: Board },
+    { id: 'chat', label: 'Chat', component: Chat },
+    { id: 'users', label: 'Users', component: UserList },
   ],
 
   activeTabIndex: 0,
