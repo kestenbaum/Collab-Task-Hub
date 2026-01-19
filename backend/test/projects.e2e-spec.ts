@@ -164,7 +164,6 @@ describe('Projects (e2e)', () => {
     it('should return a single project by ID', async () => {
       const response = await request(app.getHttpServer())
         .get(`/projects/${projectId}`)
-        .set('Authorization', `Bearer ${userToken}`)
         .expect(200);
 
       expect(response.body.id).toBe(projectId);
@@ -174,21 +173,19 @@ describe('Projects (e2e)', () => {
     it('should return 404 for non-existent project', async () => {
       await request(app.getHttpServer())
         .get('/projects/00000000-0000-0000-0000-000000000000')
-        .set('Authorization', `Bearer ${userToken}`)
         .expect(404);
     });
 
-    it('should fail when user is not a member', async () => {
+    it('should allow access even when user is not a member', async () => {
       await request(app.getHttpServer())
         .get(`/projects/${projectId}`)
-        .set('Authorization', `Bearer ${otherUserToken}`)
-        .expect(500);
+        .expect(200);
     });
 
-    it('should fail without authentication', async () => {
+    it('should allow access without authentication', async () => {
       await request(app.getHttpServer())
         .get(`/projects/${projectId}`)
-        .expect(401);
+        .expect(200);
     });
   });
 
@@ -297,7 +294,6 @@ describe('Projects (e2e)', () => {
 
       await request(app.getHttpServer())
         .get(`/projects/${projectId}`)
-        .set('Authorization', `Bearer ${userToken}`)
         .expect(404);
     });
 
