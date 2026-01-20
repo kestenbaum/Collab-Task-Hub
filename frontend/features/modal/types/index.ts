@@ -12,3 +12,8 @@ export interface ModalProps {
   onClose: () => void;
   children: React.ReactNode;
 }
+
+export interface ConfirmDeleteModalProps {
+  entityName: string;
+  onConfirm: () => Promise<void> | void;
+}
