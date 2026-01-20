@@ -7,9 +7,7 @@ import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import { ProjectDetails } from '@/features/project/components/ProjectDetails';
 import { useProjects } from '@/features/project/hooks/useProject';
 import { Tabs } from '@/features/tabs/components';
-import { TaskCard } from '@/features/task/components/TaskCard';
 import { useTasks } from '@/features/task/hooks/useTask';
-import { Button } from '@/shared/ui';
 import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
@@ -28,33 +26,17 @@ export default function ProjectPage() {
     updateProject,
     deleteProject,
   } = useProjects();
-  const { tasks, getTasks, deleteTask, createTask } = useTasks();
+  const { getTasks } = useTasks();
 
   useEffect(() => {
     if (!projectId) return;
-    getProjectById(projectId);
+    void getProjectById(projectId);
   }, [projectId, getProjectById]);
 
   useEffect(() => {
     if (!projectId) return;
     getTasks(projectId);
   }, [projectId, getTasks]);
-
-  const handleOpen = (id: string) => {
-    console.log('Open task:', id);
-  };
-
-  const handleDelete = async (id: string) => {
-    await deleteTask(id);
-  };
-
-  const handleAddTask = async () => {
-    await createTask({
-      title: 'Test task',
-      description: 'Hardcoded task for testing',
-      projectId,
-    });
-  };
 
   const handleUpdateProject = async (data: { title?: string; description?: string }) => {
     await updateProject(projectId, data);
@@ -102,15 +84,6 @@ export default function ProjectPage() {
         onUpdate={handleUpdateProject}
         onDelete={handleDeleteProject}
       />
-
-      <Button className="w-32" onClick={handleAddTask}>
-        Add task
-      </Button>
-      <div className="flex flex-col gap-3">
-        {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} onOpen={handleOpen} onDelete={handleDelete} />
-        ))}
-      </div>
 
       <Wrapper>
         <Tabs />

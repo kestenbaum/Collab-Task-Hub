@@ -36,8 +36,8 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    refreshUser();
-  }, []);
+    void refreshUser();
+  }, [refreshUser]);
 
   useEffect(() => {
     if (!user) return;
