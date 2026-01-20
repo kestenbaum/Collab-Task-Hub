@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 import { useModal } from '@/features/modal/hooks/useModal';
-import { ConfirmDeleteModalProps } from '@/features/modal/types/index';
+import { ConfirmDeleteModalProps } from '@/features/modal/types';
 import { Button } from '@/shared/ui';
 
 const ConfirmDeleteModal = ({ entityName, onConfirm }: ConfirmDeleteModalProps) => {
