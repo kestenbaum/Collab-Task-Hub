@@ -24,6 +24,11 @@ class TaskServices {
     const res = await this.axios.get<Task>(`/tasks/${id}`);
     return res.data;
   }
+
+  async updateTaskStatus(id: string, status: Task['status']): Promise<Task> {
+    const res = await this.axios.patch<Task>(`/tasks/${id}`, { status });
+    return res.data;
+  }
 }
 
 export const taskServices = new TaskServices();

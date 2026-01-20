@@ -1,14 +1,9 @@
 import React, { FC } from 'react';
-import { ColumnProps, TaskProps } from '@/features/board/components/Board';
 import BoardCard from '@/features/board/components/BoardCard';
 import { useDroppable } from '@dnd-kit/core';
+import { ColumnType } from '@/features/board/types';
 
-type ColumnType = {
-  column: ColumnProps;
-  tasks: TaskProps[];
-};
-
-const BoardColumn: FC<ColumnType> = ({ column, tasks }) => {
+const BoardColumn: FC<ColumnType> = ({ tasks, column }) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
   });

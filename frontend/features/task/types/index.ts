@@ -2,7 +2,11 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  projectId: string;
+  projectId?: string;
+  createdAt?: string;
+  priority?: string;
+  status: string;
+  updatedAt?: string;
 }
 
 export interface CreateTaskDto {
@@ -22,6 +26,7 @@ export interface TaskStore {
   createTask: (data: CreateTaskDto) => Promise<Task>;
   deleteTask: (id: string) => Promise<void>;
   getTaskById: (id: string) => Promise<Task>;
+  updateTaskStatus: (id: string, status: Task['status']) => Promise<void>;
 }
 
 export interface TaskCardProps {
