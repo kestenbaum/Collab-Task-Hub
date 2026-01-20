@@ -59,13 +59,25 @@ export const useStoreTask = create<TaskStore>((set, get) => ({
   getTaskById: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      const task = await taskServices.getTaskById(id);
-      return task;
+      return await taskServices.getTaskById(id);
     } catch (e) {
       set({ error: e instanceof Error ? e.message : 'Failed to load task' });
       throw e;
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  updateTaskStatus: async (id, status) => {
+    const previousTasks = get().tasks;
+    set({
+      tasks: previousTasks.map((t) => (t.id === id ? { ...t, status } : t)),
+    });
+
+    try {
+      await taskServices.updateTaskStatus(id, status);
+    } catch (e) {
+      set({ tasks: previousTasks, error: 'Save task failed' });
     }
   },
 }));

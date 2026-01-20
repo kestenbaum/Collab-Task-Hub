@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
-import { TaskProps } from '@/features/board/components/Board';
 import { useDraggable } from '@dnd-kit/core';
-
-type BoardCardProps = {
-  task: TaskProps;
-};
+import { BoardCardProps } from '@/features/board/types';
 
 const BoardCard: FC<BoardCardProps> = ({ task }) => {
   const { attributes, listeners, transform, setNodeRef } = useDraggable({
@@ -19,7 +15,7 @@ const BoardCard: FC<BoardCardProps> = ({ task }) => {
 
   return (
     <div
-      className="cursor-grab p-4 border border-gray-200"
+      className="cursor-grab p-4 border border-gray-200 bg-white"
       ref={setNodeRef}
       {...attributes}
       {...listeners}
