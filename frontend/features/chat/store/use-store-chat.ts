@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { ChatStore, ChatMessage } from '../types';
+
 import { chatApi } from '../api/chatApi';
+import { ChatMessage, ChatStore } from '../types';
 
 export const useStoreChat = create<ChatStore>((set, get) => ({
   messages: [],
@@ -12,10 +13,10 @@ export const useStoreChat = create<ChatStore>((set, get) => ({
 
   loadMessages: async (projectId: string, limit = 200, before?: string) => {
     set({ isLoading: true, error: null });
+
     try {
       const messages = await chatApi.getMessages(projectId, limit, before);
 
-      // If "before" is provided, we're loading older messages, prepend them
       if (before) {
         set({ messages: [...messages, ...get().messages] });
       } else {
@@ -27,16 +28,25 @@ export const useStoreChat = create<ChatStore>((set, get) => ({
         message?: string;
         config?: { url?: string };
       };
+
       const errorMessage =
         error?.response?.data?.message || error?.message || 'Failed to load messages';
-      console.error('[Chat] Failed to load messages:', {
-        status: error?.response?.status,
-        message: errorMessage,
-        url: e?.config?.url,
-        projectId,
-      });
-      set({ error: errorMessage });
-      throw e;
+
+      const isNotMemberError = errorMessage === 'You are not a member of this project';
+
+      if (!isNotMemberError) {
+        console.error('[Chat] Failed to load messages:', {
+          status: error?.response?.status,
+          message: errorMessage,
+          url: error?.config?.url,
+          projectId,
+        });
+        set({ error: errorMessage });
+      }
+
+      if (!isNotMemberError) {
+        throw e;
+      }
     } finally {
       set({ isLoading: false });
     }
@@ -44,7 +54,6 @@ export const useStoreChat = create<ChatStore>((set, get) => ({
 
   addMessage: (message: ChatMessage) => {
     const messages = get().messages;
-    // Check if message already exists (to avoid duplicates)
     if (!messages.find((m) => m.id === message.id)) {
       set({ messages: [...messages, message] });
     }
