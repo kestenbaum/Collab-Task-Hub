@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 
-import { CreateProjectDto, Project } from '@/features/project/types';
+import { CreateProjectDto, Project, UpdateProjectDto } from '@/features/project/types';
 import { api } from '@/shared/api/axios';
 
 class ProjectServices {
@@ -28,6 +28,23 @@ class ProjectServices {
     try {
       const response = await this.axios.get<Project>(`/projects/${id}`);
       return response.data;
+    } catch (e: unknown) {
+      throw e instanceof Error ? e : new Error(String(e));
+    }
+  }
+
+  public async updateProject(id: string, data: UpdateProjectDto): Promise<Project> {
+    try {
+      const response = await this.axios.patch<Project>(`/projects/${id}`, data);
+      return response.data;
+    } catch (e: unknown) {
+      throw e instanceof Error ? e : new Error(String(e));
+    }
+  }
+
+  public async deleteProject(id: string): Promise<void> {
+    try {
+      await this.axios.delete(`/projects/${id}`);
     } catch (e: unknown) {
       throw e instanceof Error ? e : new Error(String(e));
     }

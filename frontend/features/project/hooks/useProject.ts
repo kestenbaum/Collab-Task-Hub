@@ -10,6 +10,8 @@ export const useProjects = () => {
   const getProjects = useStoreProject((s) => s.getProjects);
   const getProjectById = useStoreProject((s) => s.getProjectById);
   const createProject = useStoreProject((s) => s.createProject);
+  const updateProject = useStoreProject((s) => s.updateProject);
+  const deleteProject = useStoreProject((s) => s.deleteProject);
   const clearError = useStoreProject((s) => s.clearError);
 
   return {
@@ -21,6 +23,8 @@ export const useProjects = () => {
     getProjects,
     getProjectById,
     createProject,
+    updateProject,
+    deleteProject,
     clearError,
   };
 };

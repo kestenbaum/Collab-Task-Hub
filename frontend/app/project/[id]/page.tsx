@@ -1,24 +1,52 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
+import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import { ProjectDetails } from '@/features/project/components/ProjectDetails';
 import { useProjects } from '@/features/project/hooks/useProject';
 import { Tabs } from '@/features/tabs/components';
+import { useTasks } from '@/features/task/hooks/useTask';
 import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function ProjectPage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
   const projectId = params.id;
 
-  const { selectedProject, isLoading, error, hasLoadedProject, getProjectById } = useProjects();
+  const { user } = useStoreAuth();
+  const {
+    selectedProject,
+    isLoading,
+    error,
+    hasLoadedProject,
+    getProjectById,
+    updateProject,
+    deleteProject,
+  } = useProjects();
+  const { getTasks } = useTasks();
 
   useEffect(() => {
     if (!projectId) return;
-    getProjectById(projectId);
+    void getProjectById(projectId);
   }, [projectId, getProjectById]);
+
+  useEffect(() => {
+    if (!projectId) return;
+    getTasks(projectId);
+  }, [projectId, getTasks]);
+
+  const handleUpdateProject = async (data: { title?: string; description?: string }) => {
+    await updateProject(projectId, data);
+  };
+
+  const handleDeleteProject = async () => {
+    await deleteProject(projectId);
+    router.push('/');
+  };
+  //
 
   if (isLoading) {
     return <Loader />;
@@ -50,7 +78,13 @@ export default function ProjectPage() {
 
   return (
     <section className="mt-8 flex flex-col gap-2.5">
-      <ProjectDetails project={selectedProject} />
+      <ProjectDetails
+        project={selectedProject}
+        currentUserId={user?.id}
+        onUpdate={handleUpdateProject}
+        onDelete={handleDeleteProject}
+      />
+
       <Wrapper>
         <Tabs />
       </Wrapper>

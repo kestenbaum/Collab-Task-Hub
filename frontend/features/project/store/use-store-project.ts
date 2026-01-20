@@ -66,4 +66,54 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
       set({ isLoading: false });
     }
   },
+
+  updateProject: async (id, data) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = await projectServices.updateProject(id, data);
+
+      // Update in projects list
+      set({
+        projects: get().projects.map((p) => (p.id === id ? updated : p)),
+      });
+
+      // Update selected project if it's the same one
+      if (get().selectedProject?.id === id) {
+        set({ selectedProject: updated });
+      }
+
+      return updated;
+    } catch (e) {
+      set({
+        error: e instanceof Error ? e.message : 'Failed to update project',
+      });
+      throw e;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  deleteProject: async (id) => {
+    set({ isLoading: true, error: null });
+    try {
+      await projectServices.deleteProject(id);
+
+      // Remove from projects list
+      set({
+        projects: get().projects.filter((p) => p.id !== id),
+      });
+
+      // Clear selected project if it was deleted
+      if (get().selectedProject?.id === id) {
+        set({ selectedProject: null });
+      }
+    } catch (e) {
+      set({
+        error: e instanceof Error ? e.message : 'Failed to delete project',
+      });
+      throw e;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));
