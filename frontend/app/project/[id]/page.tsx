@@ -6,9 +6,6 @@ import { useParams } from 'next/navigation';
 import { ProjectDetails } from '@/features/project/components/ProjectDetails';
 import { useProjects } from '@/features/project/hooks/useProject';
 import { Tabs } from '@/features/tabs/components';
-import { TaskCard } from '@/features/task/components/TaskCard';
-import { useTasks } from '@/features/task/hooks/useTask';
-import { Button } from '@/shared/ui';
 import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
@@ -17,35 +14,11 @@ export default function ProjectPage() {
   const projectId = params.id;
 
   const { selectedProject, isLoading, error, hasLoadedProject, getProjectById } = useProjects();
-  const { tasks, getTasks, deleteTask, createTask } = useTasks();
 
   useEffect(() => {
     if (!projectId) return;
     getProjectById(projectId);
   }, [projectId, getProjectById]);
-
-  //  Example of working with tasks
-  useEffect(() => {
-    if (!projectId) return;
-    getTasks(projectId);
-  }, [projectId, getTasks]);
-
-  const handleOpen = (id: string) => {
-    console.log('Open task:', id);
-  };
-
-  const handleDelete = async (id: string) => {
-    await deleteTask(id);
-  };
-
-  const handleAddTask = async () => {
-    await createTask({
-      title: 'Test task',
-      description: 'Hardcoded task for testing',
-      projectId,
-    });
-  };
-  //
 
   if (isLoading) {
     return <Loader />;
@@ -78,18 +51,6 @@ export default function ProjectPage() {
   return (
     <section className="mt-8 flex flex-col gap-2.5">
       <ProjectDetails project={selectedProject} />
-
-      {/* Example task */}
-      <Button className="w-32" onClick={handleAddTask}>
-        Add task
-      </Button>
-      <div className="flex flex-col gap-3">
-        {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} onOpen={handleOpen} onDelete={handleDelete} />
-        ))}
-      </div>
-      {/* .... */}
-
       <Wrapper>
         <Tabs />
       </Wrapper>
