@@ -27,6 +27,30 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   /**
+   * Get all users
+   * GET /users
+   */
+  @Get()
+  @ApiOperation({
+    summary: 'Get all users',
+    description: 'Retrieve a list of all registered users',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns list of all users',
+    type: [UserResponseDto],
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getAllUsers() {
+    const users = await this.usersService.getAllUsers();
+    return users.map((user) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordHash, ...result } = user;
+      return result;
+    });
+  }
+
+  /**
    * Get current user profile
    * GET /users/me
    */

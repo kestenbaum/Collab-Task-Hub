@@ -81,4 +81,11 @@ export class UsersService {
 
     return await this.usersRepository.save(user);
   }
+
+  async getAllUsers(): Promise<User[]> {
+    return await this.usersRepository.find({
+      select: ['id', 'email', 'name', 'createdAt', 'updatedAt'],
+      order: { createdAt: 'DESC' },
+    });
+  }
 }
