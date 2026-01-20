@@ -35,7 +35,7 @@ export default function ProjectPage() {
 
   useEffect(() => {
     if (!projectId) return;
-    getTasks(projectId);
+    void getTasks(projectId);
   }, [projectId, getTasks]);
 
   const handleUpdateProject = async (data: { title?: string; description?: string }) => {
@@ -46,7 +46,6 @@ export default function ProjectPage() {
     await deleteProject(projectId);
     router.push('/');
   };
-  //
 
   if (isLoading) {
     return <Loader />;
