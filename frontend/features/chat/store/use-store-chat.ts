@@ -21,10 +21,16 @@ export const useStoreChat = create<ChatStore>((set, get) => ({
       } else {
         set({ messages });
       }
-    } catch (e: any) {
-      const errorMessage = e?.response?.data?.message || e?.message || 'Failed to load messages';
+    } catch (e: unknown) {
+      const error = e as {
+        response?: { data?: { message?: string }; status?: number };
+        message?: string;
+        config?: { url?: string };
+      };
+      const errorMessage =
+        error?.response?.data?.message || error?.message || 'Failed to load messages';
       console.error('[Chat] Failed to load messages:', {
-        status: e?.response?.status,
+        status: error?.response?.status,
         message: errorMessage,
         url: e?.config?.url,
         projectId,

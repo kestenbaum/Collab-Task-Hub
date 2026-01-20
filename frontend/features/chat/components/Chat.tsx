@@ -8,7 +8,7 @@ import { useChatWebSocket } from '../hooks/useChatWebSocket';
 import { MessageItem } from './MessageItem';
 import { ChatInput } from './ChatInput';
 import { TypingIndicator } from './TypingIndicator';
-import { Loader } from '@/shared/ui';
+import { Loader, Button } from '@/shared/ui';
 
 const Chat: React.FC = () => {
   const { user } = useStoreAuth();
@@ -37,7 +37,6 @@ const Chat: React.FC = () => {
   const [autoScroll, setAutoScroll] = useState(true);
   const [hasLoadedInitial, setHasLoadedInitial] = useState(false);
 
-  // Load initial messages
   useEffect(() => {
     console.log('[CHAT] Load messages effect', { projectId, hasLoadedInitial });
     if (projectId && !hasLoadedInitial) {
@@ -57,14 +56,12 @@ const Chat: React.FC = () => {
     };
   }, [projectId, loadMessages, clearMessages]);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (autoScroll && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, autoScroll]);
 
-  // Handle scroll to detect if user has scrolled up
   const handleScroll = () => {
     if (messagesContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
@@ -114,6 +111,10 @@ const Chat: React.FC = () => {
     }
   };
 
+  const isProjectMember =
+    selectedProject?.members.some((member) => member.userId === user?.id) ||
+    selectedProject?.createdById === user?.id;
+
   if (!user) {
     return (
       <div className="h-full flex items-center justify-center bg-gray-50">
@@ -124,7 +125,6 @@ const Chat: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Header */}
       <div className="border-b bg-gray-50 px-4 py-3 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Project Chat</h2>
@@ -138,40 +138,62 @@ const Chat: React.FC = () => {
         </div>
       </div>
 
-      {/* Error Display */}
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-3 mx-4 mt-4">
           <p className="text-sm text-red-700">{error}</p>
         </div>
       )}
 
-      {/* Messages Container */}
+      {selectedProject && !isProjectMember && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 mx-4 mt-4">
+          <div className="flex items-start">
+            <svg
+              className="w-5 h-5 text-yellow-600 mt-0.5 mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <div>
+              <p className="text-sm font-medium text-yellow-800">
+                You are not a member of this project
+              </p>
+              <p className="text-sm text-yellow-700 mt-1">
+                You can view messages but cannot send messages in this chat.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto px-4 py-4 space-y-1"
       >
-        {/* Load More Button */}
         {messages.length >= 50 && (
           <div className="text-center mb-4">
-            <button
+            <Button
               onClick={loadOlderMessages}
               disabled={isLoading}
-              className="text-sm text-blue-600 hover:text-blue-800 underline disabled:text-gray-400"
+              variant="secondary"
+              className="text-sm underline"
             >
               Load older messages
-            </button>
+            </Button>
           </div>
         )}
 
-        {/* Loading Indicator */}
         {isLoading && messages.length === 0 && (
           <div className="flex justify-center items-center h-full">
             <Loader />
           </div>
         )}
 
-        {/* Empty State */}
         {!isLoading && messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="text-gray-400 mb-2">
@@ -194,8 +216,7 @@ const Chat: React.FC = () => {
           </div>
         )}
 
-        {/* Messages */}
-        {messages.map((message: any) => (
+        {messages.map((message) => (
           <MessageItem
             key={message.id}
             message={message}
@@ -204,21 +225,19 @@ const Chat: React.FC = () => {
           />
         ))}
 
-        {/* Typing Indicator */}
         <TypingIndicator typingUsers={typingUsers} currentUserId={user.id} />
 
-        {/* Scroll anchor */}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Scroll to Bottom Button */}
       {!autoScroll && (
-        <button
+        <Button
           onClick={() => {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
             setAutoScroll(true);
           }}
-          className="absolute bottom-24 right-8 bg-blue-500 text-white rounded-full p-3 shadow-lg hover:bg-blue-600 transition-colors"
+          variant="primary"
+          className="absolute bottom-24 right-8 rounded-full p-3 shadow-lg"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -228,14 +247,13 @@ const Chat: React.FC = () => {
               d="M19 14l-7 7m0 0l-7-7m7 7V3"
             />
           </svg>
-        </button>
+        </Button>
       )}
 
-      {/* Input */}
       <ChatInput
         onSendMessage={handleSendMessage}
         onTyping={handleTyping}
-        disabled={!isConnected}
+        disabled={!isConnected || !isProjectMember}
       />
     </div>
   );

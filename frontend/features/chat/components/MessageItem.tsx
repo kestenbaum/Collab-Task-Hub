@@ -90,18 +90,20 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message, onEdit, onDel
 
         {isOwnMessage && !isDeleted && !isEditing && (
           <div className="flex gap-2 mt-1 justify-end px-2">
-            <button
+            <Button
               onClick={() => setIsEditing(true)}
-              className="text-xs text-gray-500 hover:text-gray-700"
+              variant="secondary"
+              className="text-xs py-1 px-3"
             >
               Edit
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => onDelete(message.id)}
-              className="text-xs text-red-500 hover:text-red-700"
+              variant="secondary"
+              className="text-xs py-1 px-3 text-red-600 hover:text-red-700"
             >
               Delete
-            </button>
+            </Button>
           </div>
         )}
       </div>
