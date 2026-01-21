@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+
 import { TabsMenuState } from '@/features/tabs/types';
 
 const TabsMenu: FC<TabsMenuState> = ({ content, activeContentIndex, setActiveContentIndex }) => {

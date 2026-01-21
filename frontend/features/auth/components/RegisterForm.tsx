@@ -23,7 +23,9 @@ const RegisterForm = () => {
     try {
       await registerUser(data);
       router.push('/');
-    } catch (error) {}
+    } catch (error: unknown) {
+      throw error;
+    }
   };
 
   return (

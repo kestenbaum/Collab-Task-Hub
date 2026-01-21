@@ -1,8 +1,9 @@
-import BoardColumn from '@/features/board/components/BoardColumn';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
+
+import BoardColumn from '@/features/board/components/BoardColumn';
+import { useStoreBoard } from '@/features/board/store/use-store-board';
 import { useStoreTask } from '@/features/task/store/use-store-task';
 import { Task } from '@/features/task/types';
-import { useStoreBoard } from '@/features/board/store/use-store-board';
 
 const Board = () => {
   const { tasks, updateTaskStatus } = useStoreTask();

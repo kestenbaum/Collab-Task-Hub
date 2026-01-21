@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { useDraggable } from '@dnd-kit/core';
+
 import { BoardCardProps } from '@/features/board/types';
 
 const BoardCard: FC<BoardCardProps> = ({ task }) => {

@@ -1,6 +1,7 @@
-import { WrapperProps } from '@/shared/types';
+import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { clsx, type ClassValue } from 'clsx';
+
+import { WrapperProps } from '@/shared/types';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

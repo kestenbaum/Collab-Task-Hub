@@ -1,7 +1,8 @@
 import { AxiosInstance } from 'axios';
-import { api } from '@/shared/api/axios';
+
 import { UserDto } from '@/features/auth/types';
 import { UpdateUserDto } from '@/features/user/types';
+import { api } from '@/shared/api/axios';
 
 class UserServices {
   private axios: AxiosInstance = api;

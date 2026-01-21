@@ -1,8 +1,9 @@
 import { forwardRef } from 'react';
+
 import { InputProps } from '@/shared/types';
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, className, ...props }, ref) => {
+  ({ label, error, helperText, ...props }, ref) => {
     return (
       <div className="flex flex-col gap-1.5">
         {label && <label className="text-sm font-medium text-gray-700">{label}</label>}

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
 const ProfileName = () => {

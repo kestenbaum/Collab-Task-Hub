@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 
-import type { Project, UpdateProjectDto } from '@/features/project/types';
 import { useProjectRole } from '@/features/project/hooks/useProjectRole';
-import { Wrapper } from '@/shared/ui/Wrapper';
+import type { Project, UpdateProjectDto } from '@/features/project/types';
 import { Button } from '@/shared/ui';
+import { Wrapper } from '@/shared/ui/Wrapper';
+
 import { EditProjectForm } from './EditProjectForm';
 
 interface ProjectDetailsProps {
@@ -43,8 +44,9 @@ export function ProjectDetails({
       setIsDeleting(true);
       try {
         await onDelete();
-      } catch (err) {
+      } catch (err: unknown) {
         setIsDeleting(false);
+        throw err;
       }
     }
   };

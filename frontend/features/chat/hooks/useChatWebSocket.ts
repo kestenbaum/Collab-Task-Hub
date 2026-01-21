@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { ChatMessage, UseChatWebSocketReturn } from '../types';
-import { useStoreChat } from '../store/use-store-chat';
+
 import { env } from '@/shared/config/env';
+
+import { useStoreChat } from '../store/use-store-chat';
+import { ChatMessage, UseChatWebSocketReturn } from '../types';
 
 const WS_URL = `${env.wsUrl}/chat`;
 

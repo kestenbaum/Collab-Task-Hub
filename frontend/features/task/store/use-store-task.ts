@@ -76,8 +76,9 @@ export const useStoreTask = create<TaskStore>((set, get) => ({
 
     try {
       await taskServices.updateTaskStatus(id, status);
-    } catch (e) {
-      set({ tasks: previousTasks, error: 'Save task failed' });
+    } catch (e: unknown) {
+      const err = e instanceof Error ? e.message : 'Failed to update task status';
+      set({ tasks: previousTasks, error: err });
     }
   },
 }));
