@@ -27,7 +27,7 @@ export interface TaskStore {
   deleteTask: (id: string) => Promise<void>;
   getTaskById: (id: string) => Promise<Task>;
   updateTaskStatus: (id: string, status: Task['status']) => Promise<void>;
-  updateTask: (id: string, data: Task) => Promise<Task>;
+  updateTask: (id: string, data: Task) => Promise<void>;
 }
 
 export interface TaskCardProps {
