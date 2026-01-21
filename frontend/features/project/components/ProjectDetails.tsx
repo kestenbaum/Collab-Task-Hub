@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import ConfirmDeleteModal from '@/features/modal/components/ConfirmDeleteModal';
+import { useModal } from '@/features/modal/hooks/useModal';
 import { useProjectRole } from '@/features/project/hooks/useProjectRole';
 import type { Project, UpdateProjectDto } from '@/features/project/types';
 import { Button } from '@/shared/ui';
@@ -27,6 +29,7 @@ export function ProjectDetails({
   const [isDeleting, setIsDeleting] = useState(false);
   const { canEdit, canDelete } = useProjectRole(project, currentUserId);
   const { showToast } = useToast();
+  const { openModal } = useModal();
 
   const handleSave = async (data: UpdateProjectDto) => {
     if (onUpdate) {
@@ -38,21 +41,22 @@ export function ProjectDetails({
   const handleDelete = async () => {
     if (!onDelete) return;
 
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${project.title}"? This action cannot be undone.`,
+    openModal(
+      <ConfirmDeleteModal
+        entityName={`project "${project.title}"`}
+        onConfirm={async () => {
+          setIsDeleting(true);
+          try {
+            await onDelete();
+          } catch (err: unknown) {
+            setIsDeleting(false);
+            const errorMessage = err instanceof Error ? err.message : 'Failed to delete project';
+            console.log('Caught error in ProjectDetails:', errorMessage);
+            showToast(<div className="text-red-600 font-medium">{errorMessage}</div>, 5000);
+          }
+        }}
+      />,
     );
-
-    if (confirmed) {
-      setIsDeleting(true);
-      try {
-        await onDelete();
-      } catch (err: unknown) {
-        setIsDeleting(false);
-        const errorMessage = err instanceof Error ? err.message : 'Failed to delete project';
-        console.log('Caught error in ProjectDetails:', errorMessage);
-        showToast(<div className="text-red-600 font-medium">{errorMessage}</div>, 5000);
-      }
-    }
   };
 
   if (isEditing) {
