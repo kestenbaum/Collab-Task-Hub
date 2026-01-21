@@ -20,6 +20,10 @@ export function TaskCard({ task, onOpen, onDelete }: TaskCardProps) {
             Open
           </Button>
 
+          <Button className="px-3 py-1.5 text-xs" variant={'primary'}>
+            Edit
+          </Button>
+
           <Button
             type="button"
             variant="danger"
