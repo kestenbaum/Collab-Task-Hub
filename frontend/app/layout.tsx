@@ -4,6 +4,7 @@ import { Inter, Nunito } from 'next/font/google';
 
 import AuthProvider from '@/features/auth/provider/AuthProvider';
 import { ModalHost } from '@/features/modal/components/ModalHost';
+import { ToastProvider } from '@/shared/ui/Toast';
 import { AppHeader } from '@/widgets/app-header/ui';
 
 import './globals.css';
@@ -31,11 +32,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${nunito.variable}`}>
       <body>
-        <AppHeader />
-        <ModalHost />
-        <AuthProvider>
-          <div className="container bg-[var(--color-bg-main)]">{children}</div>
-        </AuthProvider>
+        <ToastProvider>
+          <AppHeader />
+          <ModalHost />
+          <AuthProvider>
+            <div className="container bg-[var(--color-bg-main)]">{children}</div>
+          </AuthProvider>
+        </ToastProvider>
       </body>
     </html>
   );
