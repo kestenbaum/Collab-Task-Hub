@@ -4,6 +4,12 @@ export enum ProjectRole {
   VIEWER = 'viewer',
 }
 
+export interface MemberUser {
+  id: string;
+  email: string;
+  name: string;
+}
+
 export interface ProjectMember {
   id: string;
   role: ProjectRole;

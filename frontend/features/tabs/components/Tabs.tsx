@@ -7,7 +7,7 @@ const Tabs = () => {
   return (
     <section className="p-8 font-sans text-gray-900">
       <TabsHeader>Project Menu</TabsHeader>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 ">
         <TabsMenu
           setActiveContentIndex={setActiveIndex}
           content={tabs}
