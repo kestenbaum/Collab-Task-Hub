@@ -15,7 +15,7 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({ typingUsers, c
 
   const names = otherTypingUsers.map(([, userName]) => userName);
 
-  let displayText = '';
+  let displayText;
   if (names.length === 1) {
     displayText = `${names[0]} is typing`;
   } else if (names.length === 2) {
