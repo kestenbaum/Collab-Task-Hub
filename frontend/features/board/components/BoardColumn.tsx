@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
-import BoardCard from '@/features/board/components/BoardCard';
 import { useDroppable } from '@dnd-kit/core';
+
+import BoardCard from '@/features/board/components/BoardCard';
 import { ColumnType } from '@/features/board/types';
 
 const BoardColumn: FC<ColumnType> = ({ tasks, column }) => {

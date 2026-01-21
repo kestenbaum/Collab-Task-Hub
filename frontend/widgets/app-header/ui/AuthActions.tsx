@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { HEADER_LINKS } from '../config/navigation';
-import { twMerge } from 'tailwind-merge';
 import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 import { LINK_CLASSES } from '@/widgets/app-header/config/styles';
+
+import { HEADER_LINKS } from '../config/navigation';
 
 const classes = twMerge(clsx(LINK_CLASSES));
 

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
-import { TabsContentProps } from '@/features/tabs/types';
+
 import { useStoreTabs } from '@/features/tabs/store/use-store-tabs';
+import { TabsContentProps } from '@/features/tabs/types';
 
 const TabsContent: FC<TabsContentProps> = ({ content, activeContentIndex }) => {
   const { tabs, activeTabIndex } = useStoreTabs();

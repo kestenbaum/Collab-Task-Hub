@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { AuthActions, UserDropDown } from '@/widgets/app-header/ui';
 

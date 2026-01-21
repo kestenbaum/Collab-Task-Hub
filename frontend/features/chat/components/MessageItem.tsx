@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { ChatMessage as ChatMessageType } from '../types';
+
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import { Button } from '@/shared/ui';
+
+import { ChatMessage as ChatMessageType } from '../types';
 
 interface MessageItemProps {
   message: ChatMessageType;
