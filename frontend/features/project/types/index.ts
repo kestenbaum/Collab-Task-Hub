@@ -33,8 +33,6 @@ export interface Project {
 
 export interface ProjectCardProps {
   project: Project;
-  isAuth: boolean;
-  onJoin?: (id: string) => void;
 }
 
 export interface ProjectStore {

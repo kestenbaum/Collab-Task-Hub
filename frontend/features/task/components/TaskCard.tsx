@@ -4,7 +4,7 @@ import type { TaskCardProps } from '@/features/task/types';
 import { Button } from '@/shared/ui';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
-export function TaskCard({ task, onOpen, onDelete }: TaskCardProps) {
+export function TaskCard({ task, onOpen, onDelete, onUpdate }: TaskCardProps) {
   return (
     <Wrapper>
       <div className="flex items-center justify-between gap-3">
@@ -20,7 +20,12 @@ export function TaskCard({ task, onOpen, onDelete }: TaskCardProps) {
             Open
           </Button>
 
-          <Button className="px-3 py-1.5 text-xs" variant={'primary'}>
+          <Button
+            type="button"
+            className="px-3 py-1.5 text-xs"
+            variant={'primary'}
+            onClick={() => onUpdate(task.id)}
+          >
             Edit
           </Button>
 

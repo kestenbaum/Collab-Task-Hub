@@ -81,4 +81,24 @@ export const useStoreTask = create<TaskStore>((set, get) => ({
       set({ tasks: previousTasks, error: err });
     }
   },
+
+  updateTask: async (id, data) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = await taskServices.updateTask(id, data);
+
+      set({
+        tasks: get().tasks.map((t) => (t.id === id ? updated : t)),
+      });
+
+      return updated;
+    } catch (e) {
+      set({
+        error: e instanceof Error ? e.message : 'Failed to update task',
+      });
+      throw e;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));

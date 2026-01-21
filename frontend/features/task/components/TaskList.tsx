@@ -6,6 +6,7 @@ import ConfirmDeleteModal from '@/features/modal/components/ConfirmDeleteModal';
 import { useModal } from '@/features/modal/hooks/useModal';
 import { useProjects } from '@/features/project/hooks/useProject';
 import CreateTaskForm from '@/features/task/components/CreateTaskForm';
+import { EditTaskForm } from '@/features/task/components/EditTaskForm';
 import { TaskCard } from '@/features/task/components/TaskCard';
 import { TaskDetails } from '@/features/task/components/TaskDetails';
 import { useTasks } from '@/features/task/hooks/useTask';
@@ -17,7 +18,7 @@ const TaskList = () => {
   const projectId = selectedProject?.id;
 
   const { tasks, getTasks, deleteTask, isLoading, error } = useTasks();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   useEffect(() => {
     if (!projectId) return;
@@ -42,6 +43,16 @@ const TaskList = () => {
     [openModal, tasks],
   );
 
+  const handleUpdateTask = useCallback(
+    (taskId: string) => {
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task) return;
+
+      openModal(<EditTaskForm task={task} onClose={closeModal} />);
+    },
+    [tasks, openModal, closeModal],
+  );
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-end mb-4">
@@ -59,7 +70,13 @@ const TaskList = () => {
 
       <div className="flex flex-col gap-3">
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} onOpen={handleOpenTask} onDelete={handleDeleteTask} />
+          <TaskCard
+            key={task.id}
+            task={task}
+            onOpen={handleOpenTask}
+            onDelete={handleDeleteTask}
+            onUpdate={handleUpdateTask}
+          />
         ))}
       </div>
     </div>
