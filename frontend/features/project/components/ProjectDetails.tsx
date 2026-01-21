@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useProjectRole } from '@/features/project/hooks/useProjectRole';
 import type { Project, UpdateProjectDto } from '@/features/project/types';
 import { Button } from '@/shared/ui';
+import { useToast } from '@/shared/ui/Toast';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
 import { EditProjectForm } from './EditProjectForm';
@@ -25,6 +26,7 @@ export function ProjectDetails({
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { canEdit, canDelete } = useProjectRole(project, currentUserId);
+  const { showToast } = useToast();
 
   const handleSave = async (data: UpdateProjectDto) => {
     if (onUpdate) {
@@ -46,7 +48,9 @@ export function ProjectDetails({
         await onDelete();
       } catch (err: unknown) {
         setIsDeleting(false);
-        throw err;
+        const errorMessage = err instanceof Error ? err.message : 'Failed to delete project';
+        console.log('Caught error in ProjectDetails:', errorMessage);
+        showToast(<div className="text-red-600 font-medium">{errorMessage}</div>, 5000);
       }
     }
   };

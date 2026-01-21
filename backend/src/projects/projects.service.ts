@@ -7,6 +7,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project, ProjectMember, ProjectRole } from './project.entity';
+import { Task } from '../tasks/task.entity';
+import { ChatMessage } from '../chat/message.entity';
 import {
   CreateProjectDto,
   UpdateProjectDto,
@@ -21,6 +23,10 @@ export class ProjectsService {
     private projectRepository: Repository<Project>,
     @InjectRepository(ProjectMember)
     private projectMemberRepository: Repository<ProjectMember>,
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
+    @InjectRepository(ChatMessage)
+    private chatMessageRepository: Repository<ChatMessage>,
   ) {}
 
   /**
@@ -116,6 +122,17 @@ export class ProjectsService {
 
     // Check if user is admin
     await this.checkUserRole(id, userId, [ProjectRole.ADMIN]);
+
+    // Check for existing tasks
+    const taskCount = await this.taskRepository.count({
+      where: { projectId: id },
+    });
+
+    if (taskCount > 0) {
+      throw new BadRequestException(
+        `Cannot delete project with existing tasks. Please delete all ${taskCount} task(s) first.`,
+      );
+    }
 
     await this.projectRepository.remove(project);
   }
