@@ -39,9 +39,9 @@ const CreateForm = () => {
     <div className="w-full max-w-112.5">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap gap-2.5">
-          <Input type="text" placeholder="Write project" {...register('title')} />
+          <Input type="text" placeholder="Enter project" {...register('title')} />
           {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
-          <Input type="text" placeholder="Write description" {...register('description')} />
+          <Input type="text" placeholder="Enter description" {...register('description')} />
           {errors.description && (
             <span className="text-red-500 text-sm">{errors.description.message}</span>
           )}

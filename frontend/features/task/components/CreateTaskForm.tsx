@@ -54,14 +54,14 @@ const CreateTaskForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap gap-2.5 mt-4">
           <div className="w-full">
-            <Input type="text" placeholder="Write title" {...register('title')} />
+            <Input type="text" placeholder="Enter title" {...register('title')} />
             {errors.title?.message && (
               <p className="mt-1 text-sm text-red-500">{errors.title.message}</p>
             )}
           </div>
 
           <div className="w-full">
-            <Input type="text" placeholder="Write description" {...register('description')} />
+            <Input type="text" placeholder="Enter description" {...register('description')} />
           </div>
 
           <Button type="submit" disabled={isDisabled}>
