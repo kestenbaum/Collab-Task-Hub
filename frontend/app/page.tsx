@@ -59,7 +59,7 @@ export default function Home() {
             onClick={() =>
               openModal(
                 <div className="w-[320px]">
-                  <h3 className="mb-2.5">Create Task</h3>
+                  <h3 className="mb-2.5">Create Project</h3>
                   <CreateForm />
                 </div>,
               )
