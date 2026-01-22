@@ -55,7 +55,7 @@ export function RoleDropdown({ value, disabled, onChange }: RoleDropdownProps) {
         >
           <button
             type="button"
-            className="w-full rounded px-3 py-2 text-left text-sm hover:bg-slate-100 disabled:opacity-50"
+            className="w-full rounded px-3 py-2 text-left text-sm hover:bg-slate-100 disabled:opacity-50 cursor-pointer"
             onClick={() => pick(ProjectRole.ADMIN)}
             disabled={disabled || value === ProjectRole.ADMIN}
           >
@@ -64,7 +64,7 @@ export function RoleDropdown({ value, disabled, onChange }: RoleDropdownProps) {
 
           <button
             type="button"
-            className="w-full rounded px-3 py-2 text-left text-sm hover:bg-slate-100 disabled:opacity-50"
+            className="w-full rounded px-3 py-2 text-left text-sm hover:bg-slate-100 disabled:opacity-50 cursor-pointer"
             onClick={() => pick(ProjectRole.MEMBER)}
             disabled={disabled || value === ProjectRole.MEMBER}
           >
