@@ -22,10 +22,6 @@ export default function Home() {
     void getProjects();
   }, [getProjects]);
 
-  const handleJoin = (projectId: string) => {
-    console.log('Join project:', projectId);
-  };
-
   const handleOpenProject = (id: string) => {
     if (!isAuth) {
       openModal(<AuthRequiredModal />);
@@ -81,7 +77,7 @@ export default function Home() {
             className="block cursor-pointer"
             onClick={() => handleOpenProject(project.id)}
           >
-            <ProjectCard project={project} isAuth={isAuth} onJoin={handleJoin} />
+            <ProjectCard project={project} isAuth={isAuth} />
           </div>
         ))}
       </div>

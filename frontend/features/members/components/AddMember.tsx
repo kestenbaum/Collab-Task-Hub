@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 import { useMembers } from '@/features/members/hooks/useMember';
-import { AddMemberProps } from '@/features/members/types/index';
+import { AddMemberProps } from '@/features/members/types';
 import { ProjectRole } from '@/features/project/types';
 import { useUsers } from '@/features/user/hooks/useUsers';
 import { Button } from '@/shared/ui/Button';

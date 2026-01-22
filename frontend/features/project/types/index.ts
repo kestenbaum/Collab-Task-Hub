@@ -39,6 +39,7 @@ export interface Project {
 
 export interface ProjectCardProps {
   project: Project;
+  isAuth?: boolean;
 }
 
 export interface ProjectStore {
