@@ -13,7 +13,12 @@ const CreateForm = () => {
   const { createProject, isLoading } = useProjects();
   const { closeModal } = useModal();
 
-  const { register, handleSubmit, reset } = useForm<CreateFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateFormData>({
     resolver: zodResolver(createFormSchema),
   });
 
@@ -34,7 +39,12 @@ const CreateForm = () => {
     <div className="w-full max-w-112.5">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap gap-2.5">
-          <Input type="text" placeholder="Write title" {...register('title')} />
+          <Input
+            type="text"
+            placeholder="Write title"
+            {...register('title')}
+            error={errors.title?.message}
+          />
           <Input type="text" placeholder="Write description" {...register('description')} />
           <Button type="submit">{isLoading ? 'Creating…' : 'Create project'}</Button>
         </div>
