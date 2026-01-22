@@ -46,7 +46,7 @@ const UserList = () => {
 
   const handleChangeRole = async (memberId: string, role: ProjectRole, isLastAdmin: boolean) => {
     if (isLastAdmin && role !== 'admin') {
-      openNotAllowed("You can't demove the last administator. Please assign another admin first.");
+      openNotAllowed("You can't demote the last administrator. Please assign another admin first.");
       return;
     }
 
