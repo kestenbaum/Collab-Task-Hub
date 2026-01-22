@@ -2,6 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import { UserDto } from '@/features/auth/types';
 import { UpdateUserDto } from '@/features/user/types';
+import { User } from '@/features/user/types';
 import { api } from '@/shared/api/axios';
 
 class UserServices {
@@ -14,6 +15,11 @@ class UserServices {
     } catch (e: unknown) {
       throw e instanceof Error ? e : new Error(String(e));
     }
+  }
+
+  async getUsers(): Promise<User[]> {
+    const res = await this.axios.get<User[]>('/users');
+    return res.data;
   }
 }
 
