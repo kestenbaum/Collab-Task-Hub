@@ -1,6 +1,6 @@
 'use client';
 
-import { MemberCardProps } from '@/features/members/types/index';
+import { MemberCardProps } from '@/features/members/types';
 import { Button } from '@/shared/ui';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
@@ -13,7 +13,7 @@ export function MemberCard({ member, canManage, onChangeRole, onDelete }: Member
           <p>{member.user.name}</p>
         </div>
 
-        <div className="w-[140px] text-sm text-slate-500">
+        <div className="w-35 text-sm text-slate-500">
           Role: <span>{member.role}</span>
         </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { MembersListProps } from '@/features/members/types/index';
+import { MembersListProps } from '@/features/members/types';
 
 import { MemberCard } from './MemberCard';
 

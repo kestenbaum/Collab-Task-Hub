@@ -52,7 +52,7 @@ export function ProjectDetails({
             setIsDeleting(false);
             const errorMessage = err instanceof Error ? err.message : 'Failed to delete project';
             console.log('Caught error in ProjectDetails:', errorMessage);
-            showToast(<div className="text-red-600 font-medium">{errorMessage}</div>, 5000);
+            showToast(<div className="text-red-600 font-medium">{errorMessage}</div>, 2000);
           }
         }}
       />,

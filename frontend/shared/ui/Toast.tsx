@@ -17,7 +17,7 @@ export const useToast = () => {
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<{ id: number; content: ReactNode; duration: number }[]>([]);
 
-  const showToast = useCallback((content: ReactNode, duration = 3000) => {
+  const showToast = useCallback((content: ReactNode, duration = 2000) => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, content, duration }]);
 
