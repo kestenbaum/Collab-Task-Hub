@@ -54,7 +54,7 @@ export function EditProjectForm({ project, onSave, onCancel }: EditProjectFormPr
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Project title"
           required
-          maxLength={200}
+          maxLength={30}
         />
       </div>
 

@@ -74,7 +74,7 @@ export default function Home() {
         {projects.map((project) => (
           <div
             key={project.id}
-            className="block cursor-pointer"
+            className="flex flex-col  cursor-pointer"
             onClick={() => handleOpenProject(project.id)}
           >
             <ProjectCard project={project} isAuth={isAuth} />
