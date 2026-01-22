@@ -17,27 +17,43 @@ export class AppController {
 
   @Get()
   @ApiOperation({ summary: 'Root endpoint' })
-  @ApiResponse({ status: 200, description: 'Returns welcome message' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns welcome message',
+    schema: {
+      type: 'string',
+      example: 'Welcome to Collab Task Hub API',
+    },
+  })
   getHello(): string {
     return this.appService.getHello();
-  }
-
-  @Get('health')
-  @ApiOperation({ summary: 'Health check endpoint' })
-  @ApiResponse({ status: 200, description: 'Service is healthy' })
-  healthCheck() {
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      service: 'Collab Task Hub API',
-    };
   }
 
   @Get('protected')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Protected endpoint - requires authentication' })
-  @ApiResponse({ status: 200, description: 'Returns user profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns user profile',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'This is a protected route' },
+        user: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: '123e4567-e89b-12d3-a456-426614174000',
+            },
+            email: { type: 'string', example: 'user@example.com' },
+            name: { type: 'string', example: 'John Doe' },
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   getProtected(@CurrentUser() user: User) {
     return {

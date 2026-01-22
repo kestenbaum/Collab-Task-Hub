@@ -177,9 +177,7 @@ export class ChatService {
     const isMember = project.members.some((member) => member.userId === userId);
 
     if (!isMember) {
-      throw new NotFoundException(
-        'Project not found or you do not have access',
-      );
+      throw new NotFoundException('You are not a member of this project');
     }
   }
 }

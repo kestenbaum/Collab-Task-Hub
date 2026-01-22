@@ -43,8 +43,13 @@ export default function ProjectPage() {
   };
 
   const handleDeleteProject = async () => {
-    await deleteProject(projectId);
-    router.push('/');
+    try {
+      await deleteProject(projectId);
+      router.push('/');
+    } catch (error) {
+      // Re-throw the error so ProjectDetails can catch it and show the toast
+      throw error;
+    }
   };
 
   if (isLoading) {

@@ -108,9 +108,7 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
         set({ selectedProject: null });
       }
     } catch (e) {
-      set({
-        error: e instanceof Error ? e.message : 'Failed to delete project',
-      });
+      // Don't set error in state, let the component handle it via toast
       throw e;
     } finally {
       set({ isLoading: false });

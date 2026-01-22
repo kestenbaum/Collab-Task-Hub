@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, FormWrapper, Input } from '@/shared/ui';
-import { useForm } from 'react-hook-form';
-import { LoginFormData, loginSchema } from '@/features/auth/schemas/auth.schema';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { LoginFormData, loginSchema } from '@/features/auth/schemas/auth.schema';
+import { Button, FormWrapper, Input } from '@/shared/ui';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -22,7 +23,9 @@ const LoginForm = () => {
     try {
       await loginUser(data);
       router.push('/');
-    } catch (error) {}
+    } catch (error: unknown) {
+      throw error;
+    }
   };
 
   return (

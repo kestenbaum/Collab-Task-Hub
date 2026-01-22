@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
+
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 
 interface AuthProviderProps {

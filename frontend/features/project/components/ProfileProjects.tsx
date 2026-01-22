@@ -1,7 +1,8 @@
 import React from 'react';
-import { Wrapper } from '@/shared/ui/Wrapper';
-import { Button } from '@/shared/ui';
+
 import { UserDto } from '@/features/auth/types';
+import { Button } from '@/shared/ui';
+import { Wrapper } from '@/shared/ui/Wrapper';
 
 interface ProfileProjectsProps {
   user: UserDto;

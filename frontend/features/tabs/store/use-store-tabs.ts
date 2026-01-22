@@ -1,9 +1,10 @@
 import { create } from 'zustand';
-import { TabItemProps } from '@/features/tabs/types';
+
 import Board from '@/features/board/components/Board';
 import Chat from '@/features/chat/components/Chat';
-import UserList from '@/features/user/components/UserList';
+import { TabItemProps } from '@/features/tabs/types';
 import TaskList from '@/features/task/components/TaskList';
+import UserList from '@/features/user/components/UserList';
 
 interface StoreProps {
   tabs: TabItemProps[];

@@ -76,8 +76,27 @@ export const useStoreTask = create<TaskStore>((set, get) => ({
 
     try {
       await taskServices.updateTaskStatus(id, status);
+    } catch (e: unknown) {
+      const err = e instanceof Error ? e.message : 'Failed to update task status';
+      set({ tasks: previousTasks, error: err });
+    }
+  },
+
+  updateTask: async (id, data) => {
+    const previousTasks = get().tasks;
+
+    set({
+      tasks: previousTasks.map((t) => (t.id === id ? { ...t, ...data } : t)),
+    });
+
+    try {
+      const updatedFromServer = await taskServices.updateTask(id, data);
+
+      set({
+        tasks: get().tasks.map((t) => (t.id === id ? { ...t, ...updatedFromServer } : t)),
+      });
     } catch (e) {
-      set({ tasks: previousTasks, error: 'Save task failed' });
+      set({ tasks: previousTasks, error: e instanceof Error ? e.message : 'Error' });
     }
   },
 }));

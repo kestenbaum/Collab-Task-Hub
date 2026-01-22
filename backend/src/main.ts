@@ -7,7 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
@@ -31,7 +35,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('health')
     .addTag('auth', 'Authentication endpoints')
-    .addTag('tasks')
+    .addTag('users', 'User management endpoints')
+    .addTag('projects', 'Project management endpoints')
+    .addTag('tasks', 'Task management endpoints')
+    .addTag('chat', 'Chat and messaging endpoints')
     .addBearerAuth()
     .build();
 
