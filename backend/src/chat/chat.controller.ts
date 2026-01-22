@@ -7,10 +7,9 @@ import {
   Query,
   Body,
   UseGuards,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
+import { ChatGateway } from './chat.gateway';
 import { EditMessageDto } from './dto/edit-message.dto';
 import { MessageResponseDto } from './dto/message-response.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -29,7 +28,10 @@ import {
 @Controller('chat')
 @UseGuards(JwtAuthGuard)
 export class ChatController {
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private chatGateway: ChatGateway,
+  ) {}
 
   @Get('projects/:projectId/messages')
   @ApiOperation({
@@ -146,15 +148,19 @@ export class ChatController {
     @Body() editMessageDto: EditMessageDto,
     @CurrentUser('id') userId: string,
   ) {
-    return this.chatService.editMessage(
+    const message = await this.chatService.editMessage(
       messageId,
       editMessageDto.content,
       userId,
     );
+
+    // Broadcast to all users in the project room via WebSocket
+    this.chatGateway.broadcastMessageEdited(message);
+
+    return message;
   }
 
   @Delete('messages/:messageId')
-  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Delete a message',
     description:
@@ -165,7 +171,11 @@ export class ChatController {
     description: 'Message UUID',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  @ApiResponse({ status: 204, description: 'Message deleted successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Message deleted successfully',
+    type: MessageResponseDto,
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({
     status: 403,
@@ -176,6 +186,11 @@ export class ChatController {
     @Param('messageId') messageId: string,
     @CurrentUser('id') userId: string,
   ) {
-    return this.chatService.deleteMessage(messageId, userId);
+    const message = await this.chatService.deleteMessage(messageId, userId);
+
+    // Broadcast to all users in the project room via WebSocket
+    this.chatGateway.broadcastMessageDeleted(message);
+
+    return message;
   }
 }

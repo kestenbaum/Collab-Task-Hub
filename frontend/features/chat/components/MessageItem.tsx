@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import { Button } from '@/shared/ui';
@@ -15,6 +15,11 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message, onEdit, onDel
   const { user } = useStoreAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
+
+  // Update editContent when message content changes from WebSocket
+  useEffect(() => {
+    setEditContent(message.content);
+  }, [message.content]);
 
   const isOwnMessage = user?.id === message.userId;
   const isDeleted = message.isDeleted;

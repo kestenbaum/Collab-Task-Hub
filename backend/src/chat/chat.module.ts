@@ -19,6 +19,6 @@ import { ProjectsModule } from '../projects/projects.module';
   ],
   controllers: [ChatController],
   providers: [ChatGateway, ChatService],
-  exports: [ChatService],
+  exports: [ChatService, ChatGateway],
 })
 export class ChatModule {}
