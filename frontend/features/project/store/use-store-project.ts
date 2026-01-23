@@ -72,12 +72,10 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
     try {
       const updated = await projectServices.updateProject(id, data);
 
-      // Update in projects list
       set({
         projects: get().projects.map((p) => (p.id === id ? updated : p)),
       });
 
-      // Update selected project if it's the same one
       if (get().selectedProject?.id === id) {
         set({ selectedProject: updated });
       }
@@ -98,17 +96,14 @@ export const useStoreProject = create<ProjectStore>((set, get) => ({
     try {
       await projectServices.deleteProject(id);
 
-      // Remove from projects list
       set({
         projects: get().projects.filter((p) => p.id !== id),
       });
 
-      // Clear selected project if it was deleted
       if (get().selectedProject?.id === id) {
         set({ selectedProject: null });
       }
     } catch (e) {
-      // Don't set error in state, let the component handle it via toast
       throw e;
     } finally {
       set({ isLoading: false });
