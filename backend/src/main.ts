@@ -6,12 +6,23 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Configure CORS to allow both local development and production origins
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+  ];
+
+  // Add production frontend URL if CORS_ORIGIN env variable is set
+  if (process.env.CORS_ORIGIN) {
+    const corsOrigins = process.env.CORS_ORIGIN.split(',').map((origin) =>
+      origin.trim(),
+    );
+    allowedOrigins.push(...corsOrigins);
+  }
+
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:3002',
-    ],
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
