@@ -24,7 +24,7 @@ const RegisterForm = () => {
       await registerUser(data);
       router.push('/');
     } catch (error: unknown) {
-      throw error;
+      throw error instanceof Error ? error.message : error;
     }
   };
 
