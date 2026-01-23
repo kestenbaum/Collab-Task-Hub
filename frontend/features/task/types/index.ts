@@ -32,6 +32,7 @@ export interface TaskStore {
 
 export interface TaskCardProps {
   task: Task;
+  isProjectMember: boolean;
   onUpdate: (id: string) => void;
   onOpen: (id: string) => void;
   onDelete: (id: string) => void;

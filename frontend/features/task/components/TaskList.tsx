@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect } from 'react';
 
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import ConfirmDeleteModal from '@/features/modal/components/ConfirmDeleteModal';
 import { useModal } from '@/features/modal/hooks/useModal';
 import { useProjects } from '@/features/project/hooks/useProject';
@@ -16,6 +17,10 @@ import { Loader } from '@/shared/ui/Loader';
 const TaskList = () => {
   const { selectedProject } = useProjects();
   const projectId = selectedProject?.id;
+  const { user } = useAuth();
+  const isProjectMember = Boolean(
+    user && selectedProject?.members?.some((m) => m.user.id === user.id),
+  );
 
   const { tasks, getTasks, deleteTask, isLoading, error } = useTasks();
   const { openModal, closeModal } = useModal();
@@ -55,11 +60,13 @@ const TaskList = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end mb-4">
-        <Button type="button" onClick={handleCreateTask}>
-          Add task
-        </Button>
-      </div>
+      {isProjectMember && (
+        <div className="flex justify-end mb-4">
+          <Button type="button" onClick={handleCreateTask}>
+            Add task
+          </Button>
+        </div>
+      )}
 
       {isLoading && <Loader />}
       {error && <p className="text-sm text-red-500">{error}</p>}
@@ -73,6 +80,7 @@ const TaskList = () => {
           <TaskCard
             key={task.id}
             task={task}
+            isProjectMember={isProjectMember}
             onOpen={handleOpenTask}
             onDelete={handleDeleteTask}
             onUpdate={handleUpdateTask}
