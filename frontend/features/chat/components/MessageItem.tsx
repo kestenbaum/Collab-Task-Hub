@@ -14,10 +14,15 @@ interface MessageItemProps {
 export const MessageItem: React.FC<MessageItemProps> = ({ message, onEdit, onDelete }) => {
   const { user } = useStoreAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(message.content);
+  const [editContent, setEditContent] = useState('');
 
   const isOwnMessage = user?.id === message.userId;
   const isDeleted = message.isDeleted;
+
+  const handleStartEdit = () => {
+    setEditContent(message.content);
+    setIsEditing(true);
+  };
 
   const handleSaveEdit = () => {
     if (editContent.trim()) {
@@ -92,11 +97,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message, onEdit, onDel
 
         {isOwnMessage && !isDeleted && !isEditing && (
           <div className="flex gap-2 mt-1 justify-end px-2">
-            <Button
-              onClick={() => setIsEditing(true)}
-              variant="secondary"
-              className="text-xs py-1 px-3"
-            >
+            <Button onClick={handleStartEdit} variant="secondary" className="text-xs py-1 px-3">
               Edit
             </Button>
             <Button

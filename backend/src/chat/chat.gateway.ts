@@ -13,6 +13,7 @@ import { ChatService } from './chat.service';
 import { SendMessageDto } from './dto/send-message.dto';
 import { WsJwtGuard } from './guards/ws-jwt.guard';
 import { User } from '../users/user.entity';
+import { MessageResponseDto } from './dto/message-response.dto';
 
 interface AuthenticatedSocket extends Socket {
   data: {
@@ -143,5 +144,38 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       .emit('message-edited', message);
 
     return { event: 'message-edited', data: message };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage('delete-message')
+  async handleDeleteMessage(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() data: { messageId: string },
+  ) {
+    const user = client.data.user;
+    const message = await this.chatService.deleteMessage(
+      data.messageId,
+      user.id,
+    );
+
+    // Broadcast to all users in the project room
+    this.server
+      .to(`project:${message.projectId}`)
+      .emit('message-deleted', message);
+
+    return { event: 'message-deleted', data: message };
+  }
+
+  // Public methods for broadcasting (called from REST API)
+  broadcastMessageEdited(message: MessageResponseDto): void {
+    this.server
+      .to(`project:${message.projectId}`)
+      .emit('message-edited', message);
+  }
+
+  broadcastMessageDeleted(message: MessageResponseDto): void {
+    this.server
+      .to(`project:${message.projectId}`)
+      .emit('message-deleted', message);
   }
 }

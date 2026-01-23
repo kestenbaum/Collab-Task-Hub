@@ -62,9 +62,13 @@ export class ChatService {
     }
 
     const sanitizedContent = this.sanitizeContent(content);
-    message.content = sanitizedContent;
-    message.isEdited = true;
-    message.editedAt = new Date();
+
+    // Only mark as edited if content actually changed
+    if (sanitizedContent !== message.content) {
+      message.content = sanitizedContent;
+      message.isEdited = true;
+      message.editedAt = new Date();
+    }
 
     const updatedMessage = await this.messageRepository.save(message);
     return this.toResponseDto(updatedMessage, message.user);
