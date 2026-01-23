@@ -9,7 +9,7 @@ import { Button, FormWrapper, Input } from '@/shared/ui';
 
 const LoginForm = () => {
   const router = useRouter();
-  const { loginUser, authError } = useAuth();
+  const { loginUser } = useAuth();
 
   const {
     register,
@@ -30,16 +30,6 @@ const LoginForm = () => {
 
   return (
     <FormWrapper onSubmit={handleSubmit(onSubmit)}>
-      {authError && (
-        <div className="rounded-md bg-red-50 p-4">
-          <div className="flex">
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">{authError}</h3>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="space-y-4">
         <Input
           label="Email address"
