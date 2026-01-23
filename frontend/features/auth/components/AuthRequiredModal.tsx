@@ -8,7 +8,7 @@ export function AuthRequiredModal() {
   const { closeModal } = useModal();
 
   return (
-    <div className="w-[340px]">
+    <div className="w-85">
       <h3 className="text-lg font-semibold">Login required</h3>
       <p className="mt-2 text-sm text-slate-600">To open this project, you need to be logged in.</p>
 

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Project } from '@/features/project/types';
 
 export interface UserDto {
@@ -28,10 +30,15 @@ export interface AuthState {
   isAuth: boolean;
   isLoading: boolean;
   authError: string | null;
+  setAuthError: (error: string | null) => void;
   loginUser: (data: LoginDto) => Promise<void>;
   registerUser: (data: RegisterDto) => Promise<void>;
   logoutUser: () => void;
   restoreUser: () => Promise<void>;
   refreshUser: () => Promise<void>;
   updateUser: (data: { name?: string; email?: string; password?: string }) => Promise<UserDto>;
+}
+
+export interface AuthProviderProps {
+  children: React.ReactNode;
 }

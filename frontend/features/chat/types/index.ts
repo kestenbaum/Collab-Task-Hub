@@ -29,7 +29,7 @@ export interface ChatStore {
   messages: ChatMessage[];
   isLoading: boolean;
   error: string | null;
-  typingUsers: Map<string, string>; // userId -> userName
+  typingUsers: Map<string, string>;
 
   // Actions
   clearError: () => void;

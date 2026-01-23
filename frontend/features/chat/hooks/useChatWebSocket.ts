@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-import { env } from '@/shared/config/env';
-
 import { useStoreChat } from '../store/use-store-chat';
 import { ChatMessage, UseChatWebSocketReturn } from '../types';
 
-const WS_URL = `${env.wsUrl}/chat`;
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000';
 
 export const useChatWebSocket = (projectId: string | null): UseChatWebSocketReturn => {
   const [isConnected, setIsConnected] = useState(false);
@@ -33,7 +31,6 @@ export const useChatWebSocket = (projectId: string | null): UseChatWebSocketRetu
       console.log('WebSocket connected:', socket.id);
       setIsConnected(true);
 
-      // Auto-join project room on connect
       socket.emit('join-project', { projectId });
     });
 
@@ -47,25 +44,21 @@ export const useChatWebSocket = (projectId: string | null): UseChatWebSocketRetu
       setIsConnected(false);
     });
 
-    // Listen for new messages
     socket.on('new-message', (message: ChatMessage) => {
       console.log('New message received:', message);
       addMessage(message);
     });
 
-    // Listen for edited messages
     socket.on('message-edited', (message: ChatMessage) => {
       console.log('Message edited:', message);
       updateMessage(message);
     });
 
-    // Listen for deleted messages
     socket.on('message-deleted', (message: ChatMessage) => {
       console.log('Message deleted:', message);
       updateMessage(message);
     });
 
-    // Listen for typing indicators
     socket.on('user-typing', (data: { userId: string; userName: string; isTyping: boolean }) => {
       if (data.isTyping) {
         setTypingUser(data.userId, data.userName);

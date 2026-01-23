@@ -8,24 +8,24 @@ import { useForm } from 'react-hook-form';
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
 import ProfileName from '@/features/project/components/ProfileName';
 import ProfileProjects from '@/features/project/components/ProfileProjects';
+import { UserInfo } from '@/features/user/components/UserInfo';
 import { UpdateProfileFormData, updateProfileSchema } from '@/features/user/schemas/user.schema';
 import { UpdateUserDto } from '@/features/user/types';
-import { Button, Input } from '@/shared/ui';
-import { Loader } from '@/shared/ui/Loader';
+import { Button, Input, Loader } from '@/shared/ui';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, logoutUser, updateUser, isLoading, refreshUser } = useStoreAuth();
   const [isEditMode, setIsEditMode] = useState(false);
-  const [updateError, setUpdateError] = useState<string | null>(null);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
+    clearErrors,
   } = useForm<UpdateProfileFormData>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
@@ -49,13 +49,6 @@ export default function ProfilePage() {
     });
   }, [user, reset]);
 
-  useEffect(() => {
-    if (!updateSuccess) return;
-
-    const id = setTimeout(() => setUpdateSuccess(false), 3000);
-    return () => clearTimeout(id);
-  }, [updateSuccess]);
-
   const handleLogout = () => {
     logoutUser();
     router.push('/login');
@@ -68,30 +61,20 @@ export default function ProfilePage() {
         email: user.email,
         password: '',
       });
-      setUpdateError(null);
-      setUpdateSuccess(false);
     }
     setIsEditMode((prev) => !prev);
   };
 
   const onSubmit = async (data: UpdateProfileFormData) => {
-    setUpdateError(null);
-    setUpdateSuccess(false);
+    if (!user) return;
+    clearErrors('root');
 
     try {
       const updateData: UpdateUserDto = {};
 
-      if (data.name && data.name !== user?.name) {
-        updateData.name = data.name;
-      }
-
-      if (data.email && data.email !== user?.email) {
-        updateData.email = data.email;
-      }
-
-      if (data.password) {
-        updateData.password = data.password;
-      }
+      if (data.name !== user.name) updateData.name = data.name;
+      if (data.email !== user.email) updateData.email = data.email;
+      if (data.password) updateData.password = data.password;
 
       if (Object.keys(updateData).length === 0) {
         setIsEditMode(false);
@@ -112,16 +95,17 @@ export default function ProfilePage() {
         password: '',
       });
 
-      setUpdateSuccess(true);
       setIsEditMode(false);
-    } catch (error) {
-      setUpdateError(error instanceof Error ? error.message : 'Failed to update profile');
+    } catch (error: unknown) {
+      setError('root', {
+        type: 'server',
+        message: error instanceof Error ? error.message : 'Update failed',
+      });
     }
   };
 
-  if (!user) {
-    return <Loader />;
-  }
+  if (!user) return <Loader />;
+
   return (
     <section className="min-h-[calc(100vh-77px-4rem)] bg-bg-main pt-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -140,15 +124,9 @@ export default function ProfilePage() {
               </Button>
             </div>
 
-            {updateSuccess && (
-              <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
-                Profile updated successfully!
-              </div>
-            )}
-
-            {updateError && (
+            {errors.root && (
               <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
-                {updateError}
+                {errors.root.message}
               </div>
             )}
 
@@ -181,18 +159,7 @@ export default function ProfilePage() {
                 </Button>
               </form>
             ) : (
-              <div className="space-y-2">
-                <p>
-                  <span className="text-sm text-gray-500">Name</span>
-                  <br />
-                  <span className="text-lg">{user.name}</span>
-                </p>
-                <p>
-                  <span className="text-sm text-gray-500">Email</span>
-                  <br />
-                  <span className="text-lg">{user.email}</span>
-                </p>
-              </div>
+              <UserInfo name={user.name} email={user.email} />
             )}
           </div>
         </Wrapper>

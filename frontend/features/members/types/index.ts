@@ -35,7 +35,10 @@ export interface MembersStore {
   isLoading: boolean;
   error: string | null;
 
-  addMember: (projectId: string, dto: AddMemberDto) => Promise<void>;
+  addMember: (
+    projectId: string,
+    dto: { userId: string | undefined; role: ProjectRole },
+  ) => Promise<void>;
   updateRole: (projectId: string, memberId: string, role: ProjectRole) => Promise<void>;
   deleteMember: (projectId: string, memberId: string) => Promise<void>;
 }

@@ -10,7 +10,7 @@ export const AppHeader = () => {
   const { isAuth, user, logoutUser } = useAuth();
 
   return (
-    <header className="h-[77px] bg-white border-b border-[var(--color-border-default)] flex items-center">
+    <header className="h-19.25 bg-white border-b border-border-default flex items-center">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">

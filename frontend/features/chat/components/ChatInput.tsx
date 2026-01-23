@@ -17,18 +17,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onTyping, d
     const value = e.target.value;
     setMessage(value);
 
-    // Handle typing indicator
     if (value && !isTyping) {
       setIsTyping(true);
       onTyping(true);
     }
 
-    // Clear existing timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
 
-    // Set timeout to stop typing indicator
     typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false);
       onTyping(false);

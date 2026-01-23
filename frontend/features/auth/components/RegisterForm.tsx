@@ -1,4 +1,4 @@
-import React from 'react';
+'use client';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -9,22 +9,35 @@ import { Button, FormWrapper, Input } from '@/shared/ui';
 
 const RegisterForm = () => {
   const router = useRouter();
-  const { registerUser, authError } = useAuth();
+  const { registerUser, authError, clearAuthError } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
+    clearErrors,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
   });
 
   const onSubmit = async (data: RegisterFormData) => {
+    clearErrors('root');
+    setTimeout(() => clearAuthError(), 2000);
     try {
       await registerUser(data);
       router.push('/');
     } catch (error: unknown) {
-      throw error instanceof Error ? error.message : error;
+      setError('root', {
+        type: 'server',
+        message:
+          error instanceof Error ? error.message : 'Failed to create account. Please try again.',
+      });
     }
   };
 

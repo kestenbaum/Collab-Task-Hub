@@ -1,4 +1,9 @@
-import React, { ButtonHTMLAttributes, FormHTMLAttributes, InputHTMLAttributes } from 'react';
+import React, {
+  ButtonHTMLAttributes,
+  FormHTMLAttributes,
+  InputHTMLAttributes,
+  type ReactNode,
+} from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger';
 
@@ -20,4 +25,16 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export interface WrapperProps {
   children: React.ReactNode;
+}
+
+export interface LoaderProps {
+  message?: string;
+}
+
+export interface ToastContextType {
+  showToast: (content: ReactNode, duration?: number) => void;
+}
+
+export interface ExtendedWrapperProps extends WrapperProps {
+  className?: string;
 }

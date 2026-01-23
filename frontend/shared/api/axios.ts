@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-import { env } from '../config/env';
-
 export const api = axios.create({
-  baseURL: env.apiUrl,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -22,10 +20,13 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
+  (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        localStorage.removeItem('access_token');
+      }
     }
+
     return Promise.reject(error);
   },
 );

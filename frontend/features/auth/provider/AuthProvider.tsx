@@ -2,25 +2,17 @@
 import React, { useEffect } from 'react';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
-
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
+import { AuthProviderProps } from '@/features/auth/types';
+import { Loader } from '@/shared/ui';
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const { restoreUser, isLoading } = useStoreAuth();
 
   useEffect(() => {
-    restoreUser();
+    void restoreUser();
   }, [restoreUser]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  if (isLoading) return <Loader />;
 
   return <>{children}</>;
 };

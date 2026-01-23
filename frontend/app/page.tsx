@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { AuthRequiredModal } from '@/features/auth/components/AuthRequiredModal';
@@ -22,27 +22,24 @@ export default function Home() {
     void getProjects();
   }, [getProjects]);
 
-  const handleOpenProject = (id: string) => {
-    if (!isAuth) {
-      openModal(<AuthRequiredModal />);
-      return;
-    }
-    router.push(`/project/${id}`);
-  };
+  const handleOpenProject = useCallback(
+    (id: string) => {
+      if (!isAuth) {
+        openModal(<AuthRequiredModal />);
+        return;
+      }
+      router.push(`/project/${id}`);
+    },
+    [isAuth, openModal, router],
+  );
 
-  if (isLoading) {
-    return (
-      <div className="container mt-8">
-        <Loader />
-      </div>
-    );
-  }
+  if (isLoading) return <Loader />;
 
   if (error)
     return (
       <div className="p-6">
         <p className="text-red-600">{error}</p>
-        <button className="underline" onClick={getProjects}>
+        <button className="underline" onClick={() => void getProjects()}>
           Retry
         </button>
       </div>
@@ -53,7 +50,7 @@ export default function Home() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl">Projects</h1>
 
-        {isAuth ? (
+        {isAuth && (
           <Button
             variant="primary"
             onClick={() =>
@@ -67,14 +64,14 @@ export default function Home() {
           >
             Create
           </Button>
-        ) : null}
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <div
             key={project.id}
-            className="flex flex-col  cursor-pointer"
+            className="flex flex-col cursor-pointer"
             onClick={() => handleOpenProject(project.id)}
           >
             <ProjectCard project={project} isAuth={isAuth} />

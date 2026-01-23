@@ -6,7 +6,6 @@ interface TypingIndicatorProps {
 }
 
 export const TypingIndicator: React.FC<TypingIndicatorProps> = ({ typingUsers, currentUserId }) => {
-  // Filter out current user
   const otherTypingUsers = Array.from(typingUsers.entries()).filter(
     ([userId]) => userId !== currentUserId,
   );

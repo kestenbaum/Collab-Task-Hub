@@ -11,6 +11,8 @@ export const useStoreAuth = create<AuthState>((set) => ({
   isLoading: false,
   authError: null,
 
+  setAuthError: (error) => set({ authError: error }),
+
   loginUser: async (credentials) => {
     set({ isLoading: true, authError: null });
     try {

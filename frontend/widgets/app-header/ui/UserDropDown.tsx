@@ -3,17 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-import { HEADER_LINKS } from '../config/navigation';
+import { useCreateName } from '@/shared/hooks/useCreateName';
+import { UserDropdownProps } from '@/widgets/app-header/types';
 
-interface UserDropdownProps {
-  user: { name?: string } | null;
-  onLogout: () => void;
-}
+import { HEADER_LINKS } from '../config/navigation';
 
 export const UserDropDown = ({ user, onLogout }: UserDropdownProps) => {
   const [open, setOpen] = useState(false);
-
-  const initialName = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
+  const initialName = useCreateName(user?.name);
 
   return (
     <div className="relative">
@@ -22,7 +19,7 @@ export const UserDropDown = ({ user, onLogout }: UserDropdownProps) => {
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 rounded-md px-2 py-1.5 cursor-pointer hover:bg-slate-50 transition-colors"
       >
-        <span className="border border-[var(--color-border-default)] grid h-9 w-9 place-items-center rounded-full font-medium">
+        <span className="border border-border-default grid h-9 w-9 place-items-center rounded-full font-medium">
           {initialName}
         </span>
         <span className={`text-xs text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`}>
@@ -34,7 +31,7 @@ export const UserDropDown = ({ user, onLogout }: UserDropdownProps) => {
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
 
-          <div className="absolute right-0 mt-2 w-44 rounded-[var(--radius-input)] border border-[var(--color-border-default)] bg-white p-1 shadow-lg z-20">
+          <div className="absolute right-0 mt-2 w-44 rounded-(--radius-input) border border-border-default bg-white p-1 shadow-lg z-20">
             <Link
               href={HEADER_LINKS.profile}
               className="block rounded-md px-3 py-2 text-sm"

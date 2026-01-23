@@ -1,4 +1,3 @@
-import React from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -15,22 +14,39 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
+    clearErrors,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    clearErrors('root');
+
     try {
       await loginUser(data);
       router.push('/');
     } catch (error: unknown) {
-      throw error;
+      setError('root', {
+        type: 'server',
+        message: error instanceof Error ? error.message : 'Invalid email or password',
+      });
     }
   };
 
   return (
     <FormWrapper onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-4">
+        {errors.root && (
+          <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+            {errors.root.message}
+          </div>
+        )}
+
         <Input
           label="Email address"
           type="email"

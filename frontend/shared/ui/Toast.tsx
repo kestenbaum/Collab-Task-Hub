@@ -2,9 +2,7 @@
 
 import { createContext, type ReactNode, useCallback, useContext, useState } from 'react';
 
-interface ToastContextType {
-  showToast: (content: ReactNode, duration?: number) => void;
-}
+import { ToastContextType } from '@/shared/types';
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
@@ -12,9 +12,12 @@ import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function ProjectPage() {
-  const params = useParams<{ id: string }>();
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const params = useParams();
   const router = useRouter();
-  const projectId = params.id;
+
+  const projectId = Array.isArray(params.id) ? params.id[0] : params.id;
 
   const { user } = useStoreAuth();
   const {
@@ -30,31 +33,33 @@ export default function ProjectPage() {
 
   useEffect(() => {
     if (!projectId) return;
+
     void getProjectById(projectId);
-  }, [projectId, getProjectById]);
-
-  useEffect(() => {
-    if (!projectId) return;
     void getTasks(projectId);
-  }, [projectId, getTasks]);
+  }, [projectId, getProjectById, getTasks]);
 
-  const handleUpdateProject = async (data: { title?: string; description?: string }) => {
-    await updateProject(projectId, data);
-  };
+  const handleUpdateProject = useCallback(
+    async (data: { title?: string; description?: string }) => {
+      if (!projectId) return;
+      await updateProject(projectId, data);
+    },
+    [projectId, updateProject],
+  );
 
-  const handleDeleteProject = async () => {
+  const handleDeleteProject = useCallback(async () => {
+    if (!projectId) return;
+
+    setDeleteError(null);
+
     try {
       await deleteProject(projectId);
       router.push('/');
-    } catch (error) {
-      // Re-throw the error so ProjectDetails can catch it and show the toast
-      throw error;
+    } catch (error: unknown) {
+      setDeleteError(error instanceof Error ? error.message : 'Failed to delete project');
     }
-  };
+  }, [projectId, deleteProject, router]);
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  if (!projectId || isLoading) return <Loader />;
 
   if (error) {
     return (
@@ -76,12 +81,18 @@ export default function ProjectPage() {
     );
   }
 
-  if (!selectedProject) {
-    return <Loader />;
-  }
+  if (!selectedProject) return <Loader />;
 
   return (
     <section className="mt-8 flex flex-col gap-2.5">
+      {deleteError && (
+        <div className="container">
+          <div className="rounded-md border border-red-200 bg-red-50 p-4">
+            <p className="text-sm text-red-700">{deleteError}</p>
+          </div>
+        </div>
+      )}
+
       <ProjectDetails
         project={selectedProject}
         currentUserId={user?.id}

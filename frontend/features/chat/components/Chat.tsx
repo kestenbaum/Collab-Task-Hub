@@ -34,17 +34,12 @@ const Chat: React.FC = () => {
   } = useStoreChat();
 
   const { isConnected, sendMessage, setTyping } = useChatWebSocket(projectId);
-
-  console.log('[CHAT] WebSocket status', { isConnected, projectId });
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const [hasLoadedInitial, setHasLoadedInitial] = useState(false);
 
   useEffect(() => {
-    console.log('[CHAT] Load messages effect', { projectId, hasLoadedInitial });
-
     if (projectId && !hasLoadedInitial) {
       loadMessages(projectId)
         .then(() => {
@@ -60,8 +55,7 @@ const Chat: React.FC = () => {
       clearMessages();
       setHasLoadedInitial(false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectId, loadMessages, clearMessages]);
+  }, [projectId, loadMessages, clearMessages, hasLoadedInitial]);
 
   useEffect(() => {
     if (autoScroll && messagesEndRef.current) {
