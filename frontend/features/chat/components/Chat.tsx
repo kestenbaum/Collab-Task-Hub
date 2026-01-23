@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
+import ConfirmDeleteModal from '@/features/modal/components/ConfirmDeleteModal';
+import { useModal } from '@/features/modal/hooks/useModal';
 import { useProjects } from '@/features/project/hooks/useProject';
 import { Button, Loader } from '@/shared/ui';
 
@@ -16,6 +18,7 @@ const Chat: React.FC = () => {
   const { user } = useStoreAuth();
   const { selectedProject } = useProjects();
   const projectId = selectedProject?.id || null;
+  const { openModal } = useModal();
 
   console.log('[CHAT] Component rendered', {
     projectId,
@@ -92,13 +95,9 @@ const Chat: React.FC = () => {
   };
 
   const handleDeleteMessage = async (messageId: string) => {
-    if (confirm('Are you sure you want to delete this message?')) {
-      try {
-        await deleteMessage(messageId);
-      } catch (error) {
-        console.error('Failed to delete message:', error);
-      }
-    }
+    openModal(
+      <ConfirmDeleteModal entityName="message" onConfirm={() => deleteMessage(messageId)} />,
+    );
   };
 
   const handleTyping = (isTyping: boolean) => {
