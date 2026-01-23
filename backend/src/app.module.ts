@@ -26,7 +26,7 @@ import { ChatModule } from './chat/chat.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: true, // TEMPORARY: Enable to create tables, disable after first deploy
         logging: true,
         ssl:
           configService.get('NODE_ENV') === 'production'
