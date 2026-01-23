@@ -30,13 +30,7 @@ export default function Home() {
     router.push(`/project/${id}`);
   };
 
-  if (isLoading) {
-    return (
-      <div className="container mt-8">
-        <Loader />
-      </div>
-    );
-  }
+  if (isLoading) return <Loader />;
 
   if (error)
     return (
@@ -58,7 +52,7 @@ export default function Home() {
             variant="primary"
             onClick={() =>
               openModal(
-                <div className="w-[320px]">
+                <div>
                   <h3 className="mb-2.5">Create Project</h3>
                   <CreateForm />
                 </div>,

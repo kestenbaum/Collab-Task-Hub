@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -16,7 +16,7 @@ import { Wrapper } from '@/shared/ui/Wrapper';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, logoutUser, updateUser, isLoading, refreshUser } = useStoreAuth();
+  const { user, logoutUser, updateUser, isLoading, refreshUser, authError } = useStoreAuth();
   const [isEditMode, setIsEditMode] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -127,7 +127,6 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Wrapper className="flex flex-col items-center p-10 text-center md:items-start md:text-left h-full">
           <ProfileName />
-
           <div className="space-y-4 w-full">
             <div className="flex justify-between items-center border-b pb-2">
               <h2 className="text-2xl font-semibold text-gray-900">User Profile</h2>
@@ -139,6 +138,16 @@ export default function ProfilePage() {
                 {isEditMode ? 'Cancel' : 'Edit Profile'}
               </Button>
             </div>
+
+            {authError && (
+              <div className="rounded-md bg-red-50 p-4">
+                <div className="flex">
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">{authError}</h3>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {updateSuccess && (
               <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">

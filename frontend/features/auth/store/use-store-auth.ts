@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { create } from 'zustand';
 
 import { authServices } from '@/features/auth/api/services/authServices';
@@ -25,6 +26,7 @@ export const useStoreAuth = create<AuthState>((set) => ({
             'Invalid credentials'
           : 'Invalid credentials';
       set({ isLoading: false, authError: errorMessage });
+      setTimeout(() => set({ authError: null }), 2000);
       throw error;
     }
   },
@@ -43,6 +45,7 @@ export const useStoreAuth = create<AuthState>((set) => ({
             'Registration failed'
           : 'Registration failed';
       set({ isLoading: false, authError: errorMessage });
+      setTimeout(() => set({ authError: null }), 2000);
       throw error;
     }
   },
@@ -68,18 +71,32 @@ export const useStoreAuth = create<AuthState>((set) => ({
       const user = await authServices.getCurrentUser();
       set({ user, isAuth: true });
     } catch (error: unknown) {
+      const errorMessage =
+        error && typeof error === 'object' && 'response' in error
+          ? (error.response as { data?: { message?: string } })?.data?.message ||
+            'Registration failed'
+          : 'Registration failed';
+      set({ isLoading: false, authError: errorMessage });
+      setTimeout(() => set({ authError: null }), 2000);
       throw error;
     }
   },
 
   updateUser: async (data: UpdateUserDto) => {
-    set({ isLoading: true });
+    set({ isLoading: true, authError: null });
     try {
       const updatedUser = await userServices.updateProfile(data);
-      set({ user: updatedUser, isLoading: false });
+      set({ user: updatedUser, isLoading: false, authError: null });
       return updatedUser;
-    } catch (err) {
-      set({ isLoading: false });
+    } catch (err: unknown) {
+      let errorMessage = 'Ошибка обновления профиля';
+
+      if (err instanceof AxiosError && err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+
+      set({ isLoading: false, authError: errorMessage });
+      setTimeout(() => set({ authError: null }), 2000);
       throw err;
     }
   },

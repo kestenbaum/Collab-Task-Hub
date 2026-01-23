@@ -9,7 +9,7 @@ import { Button, FormWrapper, Input } from '@/shared/ui';
 
 const LoginForm = () => {
   const router = useRouter();
-  const { loginUser } = useAuth();
+  const { loginUser, authError, isLoading } = useAuth();
 
   const {
     register,
@@ -23,13 +23,21 @@ const LoginForm = () => {
     try {
       await loginUser(data);
       router.push('/');
-    } catch (error: unknown) {
-      throw error;
-    }
+    } catch {}
   };
 
   return (
     <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+      {authError && (
+        <div className="rounded-md bg-red-50 p-4">
+          <div className="flex">
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">{authError}</h3>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-4">
         <Input
           label="Email address"
@@ -50,9 +58,14 @@ const LoginForm = () => {
         />
       </div>
 
-      <div>
-        <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting} variant="primary">
-          {isSubmitting ? 'Signing in...' : 'Sign in'}
+      <div className="mt-4">
+        <Button
+          type="submit"
+          isLoading={isSubmitting || isLoading}
+          disabled={isSubmitting || isLoading}
+          variant="primary"
+        >
+          {isSubmitting || isLoading ? 'Signing in...' : 'Sign in'}
         </Button>
       </div>
     </FormWrapper>
