@@ -3,13 +3,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useStoreAuth } from '@/features/auth/store/use-store-auth';
+import ConfirmDeleteModal from '@/features/modal/components/ConfirmDeleteModal';
 import { useModal } from '@/features/modal/hooks/useModal';
 import { useProjects } from '@/features/project/hooks/useProject';
 import { Button, Loader } from '@/shared/ui';
 
 import { useChatWebSocket } from '../hooks/useChatWebSocket';
 import { useStoreChat } from '../store/use-store-chat';
-import ConfirmDeleteModal from '@/features/modal/components/ConfirmDeleteModal';
 import { ChatInput } from './ChatInput';
 import { MessageItem } from './MessageItem';
 import { TypingIndicator } from './TypingIndicator';
