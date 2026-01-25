@@ -135,6 +135,7 @@ For detailed setup options, see [Development Setup](#development-setup).
 - `@nestjs/swagger` - OpenAPI documentation
 - `bcrypt` - Password hashing
 - `class-validator` + `class-transformer` - DTO validation
+- `lodash` - Utility library (required by @nestjs/swagger)
 
 **Module Architecture**:
 - `AuthModule` - Authentication (register/login/JWT validation)
@@ -153,7 +154,7 @@ For detailed setup options, see [Development Setup](#development-setup).
 ### Frontend (Next.js 16)
 
 **Core Dependencies**:
-- `next` (v16.1.1) - App router with React 19
+- `next` (v16.1.4) - App router with React 19
 - `zustand` - State management (auth, projects, tasks, chat)
 - `socket.io-client` - WebSocket client
 - `react-hook-form` + `zod` - Form validation
@@ -283,43 +284,47 @@ messages
 **Namespace**: `/chat`
 
 **Events** (Client -> Server):
-- `joinProject` - Join project room
+- `join-project` - Join project room
   ```typescript
   { projectId: string }
   ```
-- `leaveProject` - Leave project room
+- `leave-project` - Leave project room
   ```typescript
   { projectId: string }
   ```
-- `sendMessage` - Send message
+- `send-message` - Send message
   ```typescript
   { projectId: string, content: string }
   ```
 - `typing` - User typing indicator
   ```typescript
-  { projectId: string }
+  { projectId: string, isTyping: boolean }
   ```
-- `stopTyping` - Stop typing
+- `edit-message` - Edit existing message
   ```typescript
-  { projectId: string }
+  { messageId: string, content: string }
+  ```
+- `delete-message` - Delete existing message
+  ```typescript
+  { messageId: string }
   ```
 
 **Events** (Server -> Client):
-- `message` - New message broadcast
+- `new-message` - New message broadcast
   ```typescript
   { id: string, content: string, user: User, projectId: string, createdAt: Date }
   ```
-- `userTyping` - User typing broadcast
+- `message-edited` - Message edited broadcast
   ```typescript
-  { userId: string, userName: string }
+  { id: string, content: string, user: User, projectId: string, createdAt: Date, updatedAt: Date }
   ```
-- `userStoppedTyping` - User stopped typing
+- `message-deleted` - Message deleted broadcast
   ```typescript
-  { userId: string }
+  { id: string, content: string, user: User, projectId: string, createdAt: Date }
   ```
-- `error` - Error notification
+- `user-typing` - User typing status broadcast
   ```typescript
-  { message: string }
+  { userId: string, userName: string, isTyping: boolean }
   ```
 
 **Authentication**: JWT token via Socket.IO handshake auth
@@ -674,33 +679,266 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ### Backend Tests
 
-**Unit Tests**:
+#### E2E Tests
+
+**Quick Start**:
+```bash
+cd backend
+npm run test:e2e            # Runs all 111 E2E tests
+```
+
+The E2E test suite provides comprehensive integration testing of all backend endpoints and business logic with **111 automated tests** covering 7 test suites.
+
+**Test Coverage**:
+
+1. **Authentication Tests** (`test/auth.e2e-spec.ts`) - **13 tests**
+   - User registration with validation (email format, password requirements)
+   - Login with credentials (success/failure cases)
+   - JWT token generation and validation
+   - Protected endpoint access with JWT
+   - Duplicate email prevention
+   - Invalid credentials handling
+   - Token extraction and user identification
+
+2. **User Management Tests** (`test/users.e2e-spec.ts`) - **11 tests**
+   - GET /users - List all users (authenticated)
+   - GET /users/me - Get current user profile
+   - PATCH /users/me - Update user profile (name, email)
+   - Password change functionality
+   - Duplicate email detection on update
+   - Authentication requirement validation
+   - Profile field validation
+
+3. **Project Tests** (`test/projects.e2e-spec.ts`) - **25 tests**
+   - Create project with automatic admin role assignment
+   - List user's projects (filtered by membership)
+   - Get project details with members and creator
+   - Update project title and description
+   - Delete project (admin only, with task check)
+   - Role-based access control (admin/member/viewer)
+   - Project not found handling
+   - Unauthorized access prevention
+   - Task cascade prevention (can't delete project with tasks)
+
+4. **Task Tests** (`test/tasks.e2e-spec.ts`) - **43 tests**
+   - Create tasks with all fields (title, description, status, priority, assignee)
+   - List all tasks and filter by project
+   - Get individual task details
+   - Update task fields independently:
+     - Title updates (preserves other fields)
+     - Description updates
+     - Status transitions (backlog → in_progress → review → done)
+     - Priority changes (low/medium/high)
+     - Assignee assignment and reassignment
+   - Update multiple fields simultaneously
+   - Delete tasks
+   - Field validation (required fields, enum values)
+   - Authentication requirement
+   - Task not found handling
+   - Assignee relation loading
+
+5. **Project Members Tests** (`test/members.e2e-spec.ts`) - **19 tests**
+   - Add members with roles (admin/member/viewer)
+   - Remove members from projects
+   - Update member roles
+   - Get user's role in project
+   - Role-based permissions:
+     - Only admins can add/remove/update members
+     - Non-admins get 403 Forbidden
+     - Non-members get 403 Forbidden
+   - Duplicate member prevention
+   - Last admin protection (can't remove last admin)
+   - Member not found handling
+   - Project not found handling (404 vs 403 distinction)
+   - Unauthenticated access prevention
+
+6. **Chat Tests** (`test/chat.e2e-spec.ts`) - **10 tests**
+   - GET /chat/projects/:projectId/messages - Message retrieval
+   - Pagination support (limit, offset)
+   - Default pagination (20 messages)
+   - Custom page sizes
+   - PATCH /chat/messages/:messageId - Edit message
+   - DELETE /chat/messages/:messageId - Delete message
+   - Authentication requirement
+   - Project access validation
+   - Message not found handling
+
+7. **Health Check Tests** (`test/app.e2e-spec.ts`) - **3 tests**
+   - GET /health - Service health endpoint
+   - Returns status, timestamp, uptime, environment
+   - No authentication required
+   - JSON response format validation
+
+**Database Setup**:
+
+The test suite uses a dedicated PostgreSQL test database (`collab_test`) that is automatically managed:
+
+**Automatic Setup** (PowerShell):
+```bash
+# Runs automatically before each test execution via pretest:e2e hook
+backend/setup-test-db.ps1
+```
+
+**Manual Setup** (if needed):
+```powershell
+# Windows
+cd backend
+powershell -ExecutionPolicy Bypass -File ./setup-test-db.ps1
+
+# Linux/macOS
+chmod +x setup-test-db.sh
+./setup-test-db.sh
+```
+
+**Database Operations**:
+- Checks if `collab_test` database exists
+- Terminates all active connections if it exists
+- Drops and recreates the database for clean slate
+- Ensures PostgreSQL is running and accessible
+- Reports success/failure with clear error messages
+
+**Test Configuration** (`test/jest-e2e.json`):
+```json
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "maxWorkers": 1  // Sequential execution to prevent database conflicts
+}
+```
+
+**Sequential Execution**:
+Tests run with `--runInBand` flag to prevent parallel execution issues:
+- Avoids database connection conflicts
+- Prevents TypeORM enum type race conditions
+- Ensures predictable test order
+- Enables shared database state when needed
+
+**Test Utilities** (`test/test-utils.ts`):
+
+Provides helper functions for consistent test setup:
+
+```typescript
+// Create test app with all modules
+async function createTestApp(): Promise<INestApplication>
+
+// Initialize database with all entities
+// Modules included: Auth, Users, Projects, Tasks, Chat
+// TypeORM auto-sync enabled for test database
+// Logging disabled for clean test output
+```
+
+**Features**:
+- Clean database state for each test suite
+- All modules properly imported (Auth, Users, Projects, Tasks, Chat)
+- TypeORM synchronize enabled (drops/recreates schema)
+- Validation pipes configured (same as production)
+- CORS disabled for testing
+- Logging disabled for cleaner output
+
+**Test Data Management**:
+
+Each test suite:
+- Creates fresh users with unique emails
+- Generates JWT tokens for authentication
+- Creates isolated projects and tasks
+- Cleans up via database drop after suite completion
+- No shared state between test files
+
+**Running Tests**:
+
+```bash
+cd backend
+
+# Run all E2E tests (111 tests)
+npm run test:e2e
+
+# Run specific test file
+npx jest --config ./test/jest-e2e.json test/auth.e2e-spec.ts
+
+# Run with verbose output
+npx jest --config ./test/jest-e2e.json --verbose
+
+# Run in watch mode
+npx jest --config ./test/jest-e2e.json --watch
+```
+
+**Test Output**:
+```
+Test Suites: 7 passed, 7 total
+Tests:       111 passed, 111 total
+Snapshots:   0 total
+Time:        6-7 seconds
+```
+
+**What Gets Tested**:
+
+- ✅ **Authentication Flow**: Registration → Login → JWT → Protected Routes
+- ✅ **CRUD Operations**: Create, Read, Update, Delete for all entities
+- ✅ **Data Validation**: DTOs, required fields, enum values, email format
+- ✅ **Authorization**: Role-based access control (admin/member/viewer)
+- ✅ **Error Handling**: 400, 401, 403, 404 status codes with proper messages
+- ✅ **Database Relations**: Foreign keys, cascade deletes, eager loading
+- ✅ **Business Logic**: Last admin protection, task cascade prevention
+- ✅ **API Contracts**: Request/response formats, status codes, headers
+- ✅ **Edge Cases**: Duplicate emails, non-existent resources, unauthorized access
+- ✅ **Data Integrity**: Field preservation on partial updates, relation loading
+
+**Test Assertions**:
+
+Tests verify:
+- HTTP status codes (200, 201, 204, 400, 401, 403, 404)
+- Response body structure (id, timestamps, relations)
+- Response data correctness (values match inputs)
+- Error messages and formats
+- JWT token presence and format
+- Proper relation loading (user, project, assignee)
+- Enum value validation (status, priority, role)
+
+#### Unit Tests
+
+**Quick Start**:
 ```bash
 cd backend
 npm test                    # Run all unit tests
 npm run test:watch          # Watch mode
-npm run test:cov            # With coverage
+npm run test:cov            # With coverage report
 ```
 
-**E2E Tests**:
-```bash
-npm run test:e2e            # Run all E2E tests
+Currently minimal unit test coverage. E2E tests provide comprehensive integration testing.
+
+#### Automated API Tests
+
+Beyond E2E tests, additional testing tools are available:
+
+**PowerShell Script** (`test-api.ps1`):
+- Comprehensive automated test suite for all REST API endpoints
+- 56 automated tests covering 25 endpoints
+- Automatic test user generation with timestamps
+- Color-coded pass/fail output
+- Automatic cleanup after execution
+
+```powershell
+cd backend
+.\test-api.ps1
 ```
 
-**Test Files**:
-- `test/app.e2e-spec.ts` - Health endpoint
-- `test/auth.e2e-spec.ts` - Registration, login, JWT validation
-- `test/projects.e2e-spec.ts` - Project CRUD, member management
-- `test/test-utils.ts` - Test utilities (user creation, token helpers)
+**Postman Collection**:
+- `Collab-Task-Hub-API.postman_collection.json` - All API endpoints
+- `Collab-Task-Hub-Local.postman_environment.json` - Environment variables
+- 56 test assertions built-in
+- Pre-request scripts for data generation
+- Import into Postman for manual/automated testing
 
-**Automated API Tests**:
-- `test-api.ps1` - Comprehensive automated test suite for all REST API endpoints (PowerShell)
-- `Collab-Task-Hub-API.postman_collection.json` - Postman collection with all API endpoints
-- `Collab-Task-Hub-Local.postman_environment.json` - Postman environment for local testing
+See [API Testing Tools](#api-testing-tools) for detailed usage.
 
 ### Frontend Tests
 
-Currently no automated tests. Add with:
+Currently no automated tests. Recommended setup:
 ```bash
 npm install -D vitest @testing-library/react @testing-library/jest-dom
 ```
@@ -978,7 +1216,7 @@ npm audit fix
   "lodash": "^4.17.23"
 }
 ```
-This override ensures all nested dependencies use the patched lodash version, preventing prototype pollution vulnerabilities.
+This override ensures all nested dependencies use the patched lodash version, preventing prototype pollution vulnerabilities. Note: `lodash` is also installed as a direct dependency (required by `@nestjs/swagger`).
 
 ### TODO
 

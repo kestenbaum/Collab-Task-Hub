@@ -251,7 +251,19 @@ export class ProjectsService {
   /**
    * Get user's role in a project
    */
-  async getUserRole(projectId: string, userId: string): Promise<ProjectRole> {
+  async getUserRole(
+    projectId: string,
+    userId: string,
+  ): Promise<{ role: ProjectRole }> {
+    // First check if project exists
+    const projectExists = await this.projectRepository.findOne({
+      where: { id: projectId },
+    });
+
+    if (!projectExists) {
+      throw new NotFoundException(`Project with ID ${projectId} not found`);
+    }
+
     const member = await this.projectMemberRepository.findOne({
       where: { projectId, userId },
     });
@@ -260,7 +272,7 @@ export class ProjectsService {
       throw new ForbiddenException('You are not a member of this project');
     }
 
-    return member.role;
+    return { role: member.role };
   }
 
   /**
@@ -273,7 +285,7 @@ export class ProjectsService {
   ): Promise<void> {
     const userRole = await this.getUserRole(projectId, userId);
 
-    if (!requiredRoles.includes(userRole)) {
+    if (!requiredRoles.includes(userRole.role)) {
       throw new ForbiddenException(
         'You do not have permission to perform this action',
       );
