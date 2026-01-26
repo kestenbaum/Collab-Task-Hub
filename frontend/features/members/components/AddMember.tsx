@@ -6,6 +6,7 @@ import { useMembers } from '@/features/members/hooks/useMember';
 import { AddMemberProps } from '@/features/members/types';
 import { ProjectRole } from '@/features/project/types';
 import { useUsers } from '@/features/user/hooks/useUsers';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 import { Button } from '@/shared/ui/Button';
 import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
@@ -14,22 +15,20 @@ export function AddMember({ projectId, onClose, members }: AddMemberProps) {
   const { users, isLoading: usersLoading, error: usersError, getUsers } = useUsers();
   const { addMember, isLoading: memberLoading, error: memberError } = useMembers();
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getUsers(debouncedSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
 
   const memberUserId = new Set(members.map((m) => m.userId));
-  const availableUsers = users
-    .filter((u) => !memberUserId.has(u.id))
-    .filter((u) => u.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const availableUsers = users.filter((u) => !memberUserId.has(u.id));
 
   const handleAdd = async (userId: string) => {
     await addMember(projectId, { userId, role: ProjectRole.MEMBER });
     onClose();
   };
-
-  if (usersLoading) return <Loader />;
 
   return (
     <div className="w-full">
@@ -45,7 +44,11 @@ export function AddMember({ projectId, onClose, members }: AddMemberProps) {
       />
 
       <div className="mt-4 flex flex-col gap-2">
-        {availableUsers.length === 0 ? (
+        {usersLoading ? (
+          <div className="flex justify-center py-4">
+            <Loader />
+          </div>
+        ) : availableUsers.length === 0 ? (
           <p>All users are already members of this project.</p>
         ) : (
           availableUsers.map((u) => (
