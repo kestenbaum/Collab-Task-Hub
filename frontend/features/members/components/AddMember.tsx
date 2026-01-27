@@ -41,6 +41,7 @@ export function AddMember({ projectId, onClose, members }: AddMemberProps) {
             <Wrapper key={u.id}>
               <div className="flex items-center justify-between">
                 <p className="truncate text-sm font-medium">{u.name}</p>
+                <p className="truncate text-sm font-medium">{u.email}</p>
 
                 <Button
                   variant="secondary"
