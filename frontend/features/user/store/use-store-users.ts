@@ -8,10 +8,10 @@ export const useStoreUsers = create<UsersStore>((set) => ({
   isLoading: false,
   error: null,
 
-  getUsers: async () => {
+  getUsers: async (search?: string) => {
     set({ isLoading: true, error: null });
     try {
-      const data = await userServices.getUsers();
+      const data = await userServices.getUsers(search);
       set({ users: data });
     } catch (e: unknown) {
       set({ error: e instanceof Error ? e.message : 'Failed to load users' });

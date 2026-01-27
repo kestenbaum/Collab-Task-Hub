@@ -15,5 +15,5 @@ export interface UsersStore {
   isLoading: boolean;
   error: string | null;
 
-  getUsers: () => Promise<void>;
+  getUsers: (search?: string) => Promise<void>;
 }

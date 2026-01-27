@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useMembers } from '@/features/members/hooks/useMember';
 import { AddMemberProps } from '@/features/members/types';
 import { ProjectRole } from '@/features/project/types';
 import { useUsers } from '@/features/user/hooks/useUsers';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 import { Button } from '@/shared/ui/Button';
 import { Loader } from '@/shared/ui/Loader';
 import { Wrapper } from '@/shared/ui/Wrapper';
@@ -13,10 +14,13 @@ import { Wrapper } from '@/shared/ui/Wrapper';
 export function AddMember({ projectId, onClose, members }: AddMemberProps) {
   const { users, isLoading: usersLoading, error: usersError, getUsers } = useUsers();
   const { addMember, isLoading: memberLoading, error: memberError } = useMembers();
+  const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getUsers(debouncedSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
 
   const memberUserId = new Set(members.map((m) => m.userId));
   const availableUsers = users.filter((u) => !memberUserId.has(u.id));
@@ -26,15 +30,25 @@ export function AddMember({ projectId, onClose, members }: AddMemberProps) {
     onClose();
   };
 
-  if (usersLoading) return <Loader />;
-
   return (
     <div className="w-full">
       <h3>Add new users to this project</h3>
       {usersError && <p className="mt-2 text-sm text-red-500">{usersError}</p>}
 
+      <input
+        type="text"
+        placeholder="Search users..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="mt-4 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+      />
+
       <div className="mt-4 flex flex-col gap-2">
-        {availableUsers.length === 0 ? (
+        {usersLoading ? (
+          <div className="flex justify-center py-4">
+            <Loader />
+          </div>
+        ) : availableUsers.length === 0 ? (
           <p>All users are already members of this project.</p>
         ) : (
           availableUsers.map((u) => (
