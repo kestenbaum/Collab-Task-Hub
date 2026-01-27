@@ -6,12 +6,14 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserDto, UserResponseDto } from './dto/user.dto';
@@ -32,17 +34,26 @@ export class UsersController {
    */
   @Get()
   @ApiOperation({
-    summary: 'Get all users',
-    description: 'Retrieve a list of all registered users',
+    summary: 'Get all users or search users',
+    description:
+      'Retrieve a list of all registered users or search by name/email',
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search term to filter users by name or email',
+    type: String,
   })
   @ApiResponse({
     status: 200,
-    description: 'Returns list of all users',
+    description: 'Returns list of all users or filtered users',
     type: [UserResponseDto],
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getAllUsers() {
-    const users = await this.usersService.getAllUsers();
+  async getAllUsers(@Query('search') search?: string) {
+    const users = search
+      ? await this.usersService.searchUsers(search)
+      : await this.usersService.getAllUsers();
     return users.map((user) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { passwordHash, ...result } = user;

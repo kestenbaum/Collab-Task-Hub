@@ -88,4 +88,25 @@ export class UsersService {
       order: { createdAt: 'DESC' },
     });
   }
+
+  async searchUsers(query: string): Promise<User[]> {
+    if (!query || query.trim().length === 0) {
+      return this.getAllUsers();
+    }
+
+    const searchTerm = `%${query.toLowerCase()}%`;
+    return await this.usersRepository
+      .createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.email',
+        'user.name',
+        'user.createdAt',
+        'user.updatedAt',
+      ])
+      .where('LOWER(user.name) LIKE :searchTerm', { searchTerm })
+      .orWhere('LOWER(user.email) LIKE :searchTerm', { searchTerm })
+      .orderBy('user.createdAt', 'DESC')
+      .getMany();
+  }
 }

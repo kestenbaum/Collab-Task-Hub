@@ -17,8 +17,9 @@ class UserServices {
     }
   }
 
-  async getUsers(): Promise<User[]> {
-    const res = await this.axios.get<User[]>('/users');
+  async getUsers(search?: string): Promise<User[]> {
+    const params = search ? { search } : {};
+    const res = await this.axios.get<User[]>('/users', { params });
     return res.data;
   }
 }
