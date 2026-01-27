@@ -10,7 +10,16 @@ export function MemberCard({ member, canManage, onChangeRole, onDelete }: Member
     <Wrapper>
       <div className="flex items-center gap-4">
         <div className="flex-1">
-          <p>{member.user.name}</p>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-500">Name: </span>
+              <span>{member.user.name}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-500">Email: </span>
+              <span>{member.user.email}</span>
+            </div>
+          </div>
         </div>
 
         <div className="w-35 text-sm text-slate-500">
