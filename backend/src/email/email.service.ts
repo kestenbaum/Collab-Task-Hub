@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Mailjet from 'node-mailjet';
 
 @Injectable()
 export class EmailService {
+  private readonly logger = new Logger(EmailService.name);
   private mailjet: any;
   private senderEmail: string;
+  private isConfigured: boolean = false;
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get<string>('MAILJET_API_KEY');
@@ -13,9 +15,12 @@ export class EmailService {
     const senderEmail = this.configService.get<string>('MAILJET_SENDER_EMAIL');
 
     if (!apiKey || !secretKey || !senderEmail) {
-      throw new Error(
-        'Mailjet configuration is missing. Please set MAILJET_API_KEY, MAILJET_SECRET_KEY, and MAILJET_SENDER_EMAIL in .env',
+      this.logger.warn(
+        'Mailjet configuration is missing. Email functionality will be disabled. ' +
+          'Set MAILJET_API_KEY, MAILJET_SECRET_KEY, and MAILJET_SENDER_EMAIL to enable emails.',
       );
+      this.isConfigured = false;
+      return;
     }
 
     this.senderEmail = senderEmail;
@@ -23,6 +28,8 @@ export class EmailService {
       apiKey: apiKey,
       apiSecret: secretKey,
     });
+    this.isConfigured = true;
+    this.logger.log('Email service configured successfully');
   }
 
   async sendPasswordResetEmail(
@@ -30,6 +37,13 @@ export class EmailService {
     resetToken: string,
     userName: string,
   ): Promise<void> {
+    if (!this.isConfigured) {
+      this.logger.warn(
+        `Cannot send password reset email to ${toEmail}: Email service is not configured`,
+      );
+      return;
+    }
+
     const frontendUrl = this.configService.get<string>('FRONTEND_URL');
     const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
 
@@ -103,6 +117,13 @@ export class EmailService {
   }
 
   async sendWelcomeEmail(toEmail: string, userName: string): Promise<void> {
+    if (!this.isConfigured) {
+      this.logger.warn(
+        `Cannot send welcome email to ${toEmail}: Email service is not configured`,
+      );
+      return;
+    }
+
     const frontendUrl = this.configService.get<string>('FRONTEND_URL');
 
     try {
