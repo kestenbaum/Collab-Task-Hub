@@ -19,6 +19,7 @@ const Chat: React.FC = () => {
   const { openModal } = useModal();
   const { selectedProject } = useProjects();
   const projectId = selectedProject?.id || null;
+  const { openModal } = useModal();
 
   console.log('[CHAT] Component rendered', {
     projectId,
@@ -94,18 +95,9 @@ const Chat: React.FC = () => {
     }
   };
 
-  const handleDeleteMessage = (messageId: string) => {
+  const handleDeleteMessage = async (messageId: string) => {
     openModal(
-      <ConfirmDeleteModal
-        entityName="message"
-        onConfirm={async () => {
-          try {
-            await deleteMessage(messageId);
-          } catch (error) {
-            console.error('Failed to delete message:', error);
-          }
-        }}
-      />
+      <ConfirmDeleteModal entityName="message" onConfirm={() => deleteMessage(messageId)} />,
     );
   };
 
