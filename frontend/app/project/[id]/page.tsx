@@ -34,7 +34,7 @@ export default function ProjectPage() {
 
   useEffect(() => {
     if (!projectId) return;
-    getProjectById(projectId);
+    void getProjectById(projectId);
   }, [projectId, getProjectById]);
 
   useEffect(() => {
