@@ -59,3 +59,33 @@ export class AuthResponseDto {
     name: string;
   };
 }
+
+export class ForgotPasswordDto {
+  @ApiProperty({
+    example: 'user@example.com',
+    description: 'Email address to send password reset link',
+  })
+  @IsEmail({}, { message: 'Invalid email address' })
+  @IsNotEmpty({ message: 'Email is required' })
+  email: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty({
+    example: 'abc123def456',
+    description: 'Password reset token from email',
+  })
+  @IsString({ message: 'Token must be a string' })
+  @IsNotEmpty({ message: 'Token is required' })
+  token: string;
+
+  @ApiProperty({
+    example: 'newSecurePassword123',
+    description: 'New password',
+    minLength: 6,
+  })
+  @IsString({ message: 'Password must be a string' })
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
+  @IsNotEmpty({ message: 'Password is required' })
+  newPassword: string;
+}

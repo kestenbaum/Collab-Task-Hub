@@ -1,6 +1,12 @@
 import { AxiosInstance } from 'axios';
 
-import { AuthResponseDto, LoginDto, RegisterDto } from '@/features/auth/types';
+import {
+  AuthResponseDto,
+  ForgotPasswordDto,
+  LoginDto,
+  RegisterDto,
+  ResetPasswordDto,
+} from '@/features/auth/types';
 import { api } from '@/shared/api/axios';
 
 class AuthServices {
@@ -31,6 +37,16 @@ class AuthServices {
     });
 
     return data;
+  }
+
+  public async forgotPassword(data: ForgotPasswordDto): Promise<{ message: string }> {
+    const response = await this.axios.post<{ message: string }>('/auth/forgot-password', data);
+    return response.data;
+  }
+
+  public async resetPassword(data: ResetPasswordDto): Promise<{ message: string }> {
+    const response = await this.axios.post<{ message: string }>('/auth/reset-password', data);
+    return response.data;
   }
 }
 
