@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -56,6 +57,12 @@ const LoginForm = () => {
           placeholder="Enter your password"
           {...register('password')}
         />
+
+        <div className="text-right">
+          <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
+            Forgot your password?
+          </Link>
+        </div>
       </div>
 
       <div className="mt-4">

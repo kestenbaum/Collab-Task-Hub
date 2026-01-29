@@ -16,6 +16,7 @@ import { TypingIndicator } from './TypingIndicator';
 
 const Chat: React.FC = () => {
   const { user } = useStoreAuth();
+  const { openModal } = useModal();
   const { selectedProject } = useProjects();
   const projectId = selectedProject?.id || null;
   const { openModal } = useModal();

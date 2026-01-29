@@ -22,6 +22,12 @@ export class User {
   @Column()
   passwordHash: string;
 
+  @Column({ nullable: true })
+  resetPasswordToken: string;
+
+  @Column({ nullable: true })
+  resetPasswordExpires: Date;
+
   @OneToMany(() => Project, (project) => project.createdBy)
   createdProjects: Project[];
 
