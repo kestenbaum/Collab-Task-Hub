@@ -18,7 +18,6 @@ const Chat: React.FC = () => {
   const { user } = useStoreAuth();
   const { selectedProject } = useProjects();
   const projectId = selectedProject?.id || null;
-  const { openModal } = useModal();
 
   console.log('[CHAT] Component rendered', {
     projectId,
