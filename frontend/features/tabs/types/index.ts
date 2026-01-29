@@ -12,6 +12,7 @@ export interface TabItemProps {
   id: string;
   label: string;
   component: ComponentType;
+  className?: string;
 }
 
 export interface TabsContentProps {
