@@ -89,7 +89,7 @@ export const useStoreAuth = create<AuthState>((set) => ({
       set({ user: updatedUser, isLoading: false, authError: null });
       return updatedUser;
     } catch (err: unknown) {
-      let errorMessage = 'Ошибка обновления профиля';
+      let errorMessage = 'Error update profile';
 
       if (err instanceof AxiosError && err.response?.data?.message) {
         errorMessage = err.response.data.message;
