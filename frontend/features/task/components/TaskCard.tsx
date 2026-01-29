@@ -4,7 +4,7 @@ import type { TaskCardProps } from '@/features/task/types';
 import { Button } from '@/shared/ui';
 import { Wrapper } from '@/shared/ui/Wrapper';
 
-export function TaskCard({ task, isProjectMember, onOpen, onDelete, onUpdate }: TaskCardProps) {
+export function TaskCard({ task, onOpen, onDelete, onUpdate }: TaskCardProps) {
   return (
     <Wrapper>
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-import { useStoreAuth } from '@/features/auth/store/use-store-auth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import { ProjectDetails } from '@/features/project/components/ProjectDetails';
 import { useProjects } from '@/features/project/hooks/useProject';
 import { Tabs } from '@/features/tabs/components';
@@ -16,7 +16,8 @@ export default function ProjectPage() {
   const router = useRouter();
   const projectId = params.id;
 
-  const { user } = useStoreAuth();
+  const { user } = useAuth();
+
   const {
     selectedProject,
     isLoading,
@@ -27,6 +28,9 @@ export default function ProjectPage() {
     deleteProject,
   } = useProjects();
   const { getTasks } = useTasks();
+  const isProjectMember = Boolean(
+    user && selectedProject?.members?.some((m) => m.user.id === user.id),
+  );
 
   useEffect(() => {
     if (!projectId) return;
@@ -89,9 +93,11 @@ export default function ProjectPage() {
         onDelete={handleDeleteProject}
       />
 
-      <Wrapper>
-        <Tabs />
-      </Wrapper>
+      {isProjectMember && (
+        <Wrapper>
+          <Tabs />
+        </Wrapper>
+      )}
     </section>
   );
 }
