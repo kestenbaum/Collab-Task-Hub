@@ -74,16 +74,17 @@ export function ProjectDetails({
 
   return (
     <Wrapper>
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <h1 className="text-2xl font-semibold">{project.title}</h1>
-          <p className="mt-3 text-sm">
-            {project.description ? project.description : `No description`}
+      <div className="flex flex-col items-start justify-between gap-2.5">
+        <div className="flex-1 min-w-0 max-w-full">
+          <h1 className="text-2xl fon t-semibold truncate">{project.title}</h1>
+
+          <p className="mt-3 text-sm wrap-break-word">
+            {project.description ? project.description : 'No description'}
           </p>
         </div>
 
         {(canEdit || canDelete) && (
-          <menu className="ml-4 flex items-center gap-2">
+          <menu className="flex items-center gap-2">
             <div>
               {canEdit && (
                 <Button onClick={() => setIsEditing(true)} variant={'primary'}>

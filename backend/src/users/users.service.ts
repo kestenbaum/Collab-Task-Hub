@@ -109,4 +109,35 @@ export class UsersService {
       .orderBy('user.createdAt', 'DESC')
       .getMany();
   }
+
+  async setResetPasswordToken(
+    email: string,
+    token: string,
+    expiresAt: Date,
+  ): Promise<void> {
+    await this.usersRepository.update(
+      { email },
+      {
+        resetPasswordToken: token,
+        resetPasswordExpires: expiresAt,
+      },
+    );
+  }
+
+  async findByResetToken(token: string): Promise<User | null> {
+    return await this.usersRepository.findOne({
+      where: { resetPasswordToken: token },
+    });
+  }
+
+  async resetPassword(userId: string, newPassword: string): Promise<void> {
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(newPassword, saltRounds);
+
+    await this.usersRepository.update(userId, {
+      passwordHash,
+      resetPasswordToken: undefined,
+      resetPasswordExpires: undefined,
+    });
+  }
 }

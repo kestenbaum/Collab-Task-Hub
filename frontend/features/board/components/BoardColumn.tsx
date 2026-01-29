@@ -10,7 +10,10 @@ const BoardColumn: FC<ColumnType> = ({ tasks, column }) => {
   });
 
   return (
-    <div ref={setNodeRef} className="flex min-h-50 flex-col rounded-xl bg-slate-50 p-4 shadow">
+    <div
+      ref={setNodeRef}
+      className="p-1 flex min-h-12.5 flex-col rounded-lg bg-slate-50 shadow sm:p-2 md:p-2 md:rounded-xl"
+    >
       <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-600">
         {column.title}
       </h2>

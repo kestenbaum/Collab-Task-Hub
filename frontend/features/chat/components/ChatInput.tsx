@@ -65,7 +65,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onTyping, d
 
   return (
     <div className="border-t bg-white p-4">
-      <div className="flex gap-2 items-end">
+      <div className="flex flex-col gap-2 md:flex-row">
         <textarea
           value={message}
           onChange={handleInputChange}

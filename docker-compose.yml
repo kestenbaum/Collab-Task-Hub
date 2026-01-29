@@ -36,6 +36,11 @@ services:
       DB_DATABASE: ${DB_DATABASE:-collab_task_hub}
       PORT: 4000
       NODE_ENV: development
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_key_here}
+      MAILJET_API_KEY: ${MAILJET_API_KEY}
+      MAILJET_SECRET_KEY: ${MAILJET_SECRET_KEY}
+      MAILJET_SENDER_EMAIL: ${MAILJET_SENDER_EMAIL}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
     depends_on:
       postgres:
         condition: service_healthy

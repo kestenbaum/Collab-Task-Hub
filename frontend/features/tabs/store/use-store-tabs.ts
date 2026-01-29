@@ -15,7 +15,7 @@ interface StoreProps {
 export const useStoreTabs = create<StoreProps>((set) => ({
   tabs: [
     { id: 'tasks', label: 'Tasks', component: TaskList },
-    { id: 'board', label: 'Board', component: Board },
+    { id: 'board', label: 'Board', component: Board, className: 'hidden md:flex' },
     { id: 'chat', label: 'Chat', component: Chat },
     { id: 'users', label: 'Users', component: UserList },
   ],

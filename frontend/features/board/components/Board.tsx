@@ -20,7 +20,7 @@ const Board = () => {
   }
 
   return (
-    <div className="bg-slate-100 p-6">
+    <div className="p-3 bg-slate-100 md:p-6">
       <div
         className="grid gap-6"
         style={{

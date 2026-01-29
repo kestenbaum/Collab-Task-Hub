@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ChatModule } from './chat/chat.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -26,8 +27,14 @@ import { ChatModule } from './chat/chat.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: true, // TEMPORARY: Enable to create tables, disable after first deploy
         logging: true,
+        ssl:
+          configService.get('NODE_ENV') === 'production'
+            ? {
+                rejectUnauthorized: false,
+              }
+            : false,
       }),
       inject: [ConfigService],
     }),
@@ -36,6 +43,7 @@ import { ChatModule } from './chat/chat.module';
     ProjectsModule,
     TasksModule,
     ChatModule,
+    EmailModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],

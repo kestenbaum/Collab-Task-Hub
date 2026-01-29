@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '../src/auth/auth.module';
 import { UsersModule } from '../src/users/users.module';
 import { ProjectsModule } from '../src/projects/projects.module';
+import { TasksModule } from '../src/tasks/tasks.module';
+import { ChatModule } from '../src/chat/chat.module';
 
 export async function createTestApp(): Promise<INestApplication> {
   const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -23,10 +25,13 @@ export async function createTestApp(): Promise<INestApplication> {
         entities: [__dirname + '/../src/**/*.entity{.ts,.js}'],
         synchronize: true,
         dropSchema: true,
+        logging: false,
       }),
       AuthModule,
       UsersModule,
       ProjectsModule,
+      TasksModule,
+      ChatModule,
     ],
   }).compile();
 
