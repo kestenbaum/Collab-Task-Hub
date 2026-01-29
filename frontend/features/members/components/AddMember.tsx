@@ -53,9 +53,16 @@ export function AddMember({ projectId, onClose, members }: AddMemberProps) {
         ) : (
           availableUsers.map((u) => (
             <Wrapper key={u.id}>
-              <div className="flex items-center justify-between">
-                <p className="truncate text-sm font-medium">{u.name}</p>
-                <p className="truncate text-sm font-medium">{u.email}</p>
+              <div className="flex w-full flex-col items-start gap-2">
+                <p className="flex flex-wrap gap-1 min-w-30 truncate text-sm font-medium">
+                  <span>Name:</span>
+                  <span>{u.name}</span>
+                </p>
+
+                <p className="flex flex-wrap gap-1 min-w-30 truncate text-sm font-medium">
+                  <span>Email:</span>
+                  <span>{u.email}</span>
+                </p>
 
                 <Button
                   variant="secondary"
