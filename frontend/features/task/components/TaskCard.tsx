@@ -7,15 +7,15 @@ import { Wrapper } from '@/shared/ui/Wrapper';
 export function TaskCard({ task, isProjectMember, onOpen, onDelete, onUpdate }: TaskCardProps) {
   return (
     <Wrapper>
-      <div className="flex items-center justify-between gap-3">
-        <p>{task.title}</p>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <p className="text-sm md:text-base">{task.title}</p>
 
         {isProjectMember && (
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
             <Button
               type="button"
               variant="secondary"
-              className="px-3 py-1.5 text-xs"
+              className="w-full px-3 py-2 text-xs md:w-auto"
               onClick={() => onOpen(task.id)}
             >
               Open
@@ -23,8 +23,8 @@ export function TaskCard({ task, isProjectMember, onOpen, onDelete, onUpdate }: 
 
             <Button
               type="button"
-              className="px-3 py-1.5 text-xs"
-              variant={'primary'}
+              variant="primary"
+              className="w-full px-3 py-2 text-xs md:w-auto"
               onClick={() => onUpdate(task.id)}
             >
               Edit
@@ -33,7 +33,7 @@ export function TaskCard({ task, isProjectMember, onOpen, onDelete, onUpdate }: 
             <Button
               type="button"
               variant="danger"
-              className="px-3 py-1.5 text-xs"
+              className="w-full px-3 py-2 text-xs md:w-auto"
               onClick={() => onDelete(task.id)}
             >
               Delete
